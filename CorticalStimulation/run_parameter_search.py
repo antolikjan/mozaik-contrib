@@ -6,7 +6,7 @@ import time
 
 
 if True:
-    CombinationParameterSearch(SlurmSequentialBackendIoV(num_threads=10,num_mpi=1),{
+    CombinationParameterSearch(SlurmSequentialBackendIoV(num_threads=30,num_mpi=1),{
 				         'sheets.l4_cortex_exc.L4ExcL4InhConnection.base_weight' : [0.0013],
 				         'sheets.l4_cortex_exc.params.cell.params.v_reset' : [-60],
 				         'sheets.l4_cortex_exc.params.cell.params.tau_syn_I' : [1.9],
@@ -19,7 +19,7 @@ if True:
 				         'sheets.l23_cortex_inh.L4ExcL23InhConnection.num_samples' : [135],
 				         'sheets.l4_cortex_exc.L4ExcL4ExcConnection.weight_functions.f1.params.sigma' : [1.2],
 				         'with_cortical_conn' : [False],
-				         'sheets.l4_cortex_exc.AfferentConnection.base_weight' : [0.0],#[0.0012],
+				         'sheets.l4_cortex_exc.AfferentConnection.base_weight' : [0],#[0.0012],
 
 				         }).run_parameter_search()
 
