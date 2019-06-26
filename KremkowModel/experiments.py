@@ -16,7 +16,7 @@ def create_experiments(model):
                                                                                  'temporal_frequency'  : 2,
                                                                                  'grating_duration' : 2*147*7,
                                                                                  'contrasts' : [100],
-                                                                                 'num_trials' : 3})),
+                                                                                 'num_trials' : 2})),
                        
                            
                            #MeasureFrequencySensitivity(model,ParameterSet({

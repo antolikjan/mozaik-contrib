@@ -4,11 +4,8 @@ This is implementation of model of push-pull connectvity:
 Jens Kremkow: Correlating Excitation and Inhibition in Visual Cortical Circuits: Functional Consequences and Biological Feasibility. PhD Thesis, 2009.
 """
 #from pyNN import nest
-import sys
-sys.path.insert(0,"/home/jan/cluster/mozaik/mozaik/")
 
-
-if True:
+if False:
     try:
         from mpi4py import MPI
     except ImportError:
@@ -20,14 +17,13 @@ if True:
     
 
 
-    from model import PushPullCCModel
-    from experiments import create_experiments
-
-
+from model import PushPullCCModel
+from experiments import create_experiments
 from parameters import ParameterSet
 import mozaik
 from mozaik.controller import run_workflow, setup_logging
 from mozaik.storage.datastore import Hdf5DataStore,PickledDataStore
+import sys
 print mozaik.__file__
 print sys.path
 
@@ -48,10 +44,9 @@ if True:
     #model.connectors['V1AffInhConnectionOn'].store_connections(data_store)    
     #model.connectors['V1AffInhConnectionOff'].store_connections(data_store)    
     data_store.save()
-    if mpi_comm.rank == MPI_ROOT:
-	from analysis_and_visualization import perform_analysis_and_visualization
-        perform_analysis_and_visualization(data_store)
-    
+    from analysis_and_visualization import perform_analysis_and_visualization
+    perform_analysis_and_visualization(data_store)
+
 else: 
     setup_logging()
     data_store = PickledDataStore(load=True,parameters=ParameterSet({'root_directory':'FeedForwardInhibition_test_____', 'store_stimuli' : False}),replace=True)

@@ -8,6 +8,14 @@ from mozaik.space import VisualRegion
 
 class SelfSustainedPushPull(Model):
     
+    """
+    This is a comprehensive large-scale spiking network model of cat primary visual cortex published in following preprint:
+
+    Ján Antolík, Cyril Monier, Andrew Davison, Yves Frégnac
+    A comprehensive data-driven model of cat primary visual cortex (2018)
+    doi: https://doi.org/10.1101/416156 
+    """
+
     required_parameters = ParameterSet({
         'sheets' : ParameterSet({
             'l4_cortex_exc' : ParameterSet, 
