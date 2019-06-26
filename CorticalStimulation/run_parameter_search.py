@@ -20,7 +20,6 @@ if True:
 				         'sheets.l4_cortex_exc.L4ExcL4ExcConnection.weight_functions.f1.params.sigma' : [1.2],
 				         'with_cortical_conn' : [True],
 				         'sheets.l4_cortex_exc.AfferentConnection.base_weight' : [0.0012],
-
 				         }).run_parameter_search()
 
 
