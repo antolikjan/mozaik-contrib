@@ -2,7 +2,7 @@
 """
 
 """
-#from mpi4py import MPI 
+from mpi4py import MPI 
 from pyNN import nest
 import sys
 import mozaik.controller
@@ -18,12 +18,12 @@ from parameters import ParameterSet
 #mpi_comm = MPI.COMM_WORLD
 
 if True:
-    data_store,model = run_workflow('TestLGN',SelfSustainedPushPull,create_experiments_bar)
+    data_store,model = run_workflow('TestLGN',SelfSustainedPushPull,create_experiments_cs)
     data_store.save() 
 else: 
-    data_store = PickledDataStore(load=True,parameters=ParameterSet({'root_directory':'TestLGN_rup=28;rfr=7_____','store_stimuli' : False}),replace=True)
+    data_store = PickledDataStore(load=True,parameters=ParameterSet({'root_directory':'TestLGN_test_____','store_stimuli' : False}),replace=True)
 
 #if mpi_comm.rank == 0:
 #   print "Starting visualization" 
-perform_analysis_and_visualization_small(data_store)
+perform_analysis_and_visualization_contrast_sensitivity(data_store)
 

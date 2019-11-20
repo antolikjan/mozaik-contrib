@@ -1,7 +1,7 @@
 {
     'input_space_type' : 'mozaik.space.VisualSpace',
     'input_space': {
-        'update_interval': 28.0, # ms
+        'update_interval': 7.0, # ms
         'background_luminance': 50.0, # cd/m²
     },
     'visual_field': {
