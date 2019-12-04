@@ -82,6 +82,6 @@ def create_experiments_cs(model):
                                                                       'temporal_frequency' : 2,
                                                                       'grating_duration' : 2*143*7,
                                                                       'contrasts' : [0.1,1,5,10,30,60,90,100],
-                                                                      'num_trials' : 5
+                                                                      'num_trials' : 10
                                                                       })),
 	    ]
