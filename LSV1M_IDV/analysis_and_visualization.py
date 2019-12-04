@@ -8,9 +8,7 @@ from mozaik.storage.datastore import PickledDataStore
 from mozaik.controller import Global
 
 import sys
-sys.path.append('/home/antolikjan/projects/mozaikold/contrib')
-import Kremkow_plots
-from Kremkow_plots import *
+sys.path.append('/home/jantolik/projects/mozaiknew/contrib')
 from lsv1m_paper import *
 
 
