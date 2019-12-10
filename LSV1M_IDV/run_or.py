@@ -5,6 +5,9 @@ Vogels, T. P., & Abbott, L. F. (2005).
 Signal propagation and logic gating in networks of integrate-and-fire neurons. 
 The Journal of neuroscience : the official journal of the Society for Neuroscience, 25(46), 10786–95. 
 """
+import matplotlib
+matplotlib.use('Agg')
+
 from pyNN import nest
 import sys
 import mozaik.controller
@@ -20,7 +23,7 @@ from mpi4py import MPI
 mpi_comm = MPI.COMM_WORLD
 
 
-if False:
+if True:
     data_store,model = run_workflow('SelfSustainedPushPull',SelfSustainedPushPull,create_experiments_or)
     
     if False:
