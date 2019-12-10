@@ -8,7 +8,7 @@ from mozaik.storage.datastore import PickledDataStore
 from mozaik.controller import Global
 
 import sys
-sys.path.append('/home/antolikjan/projects/mozaikold/contrib')
+sys.path.append('/home/antolikjan/projects/mozaik/contrib')
 import Kremkow_plots
 from Kremkow_plots import *
 from lsv1m_paper import *
@@ -34,9 +34,9 @@ def analysis(data_store,analog_ids,analog_ids_inh,analog_ids23=None,analog_ids_i
         logger.info('0: ' + str(memory_usage_psutil()))
         
         TrialAveragedFiringRate(param_filter_query(data_store,sheet_name=sheets,st_name='FullfieldDriftingSinusoidalGrating'),ParameterSet({})).analyse()
-        TrialAveragedFiringRate(param_filter_query(data_store,st_direct_stimulation_name="None",st_name='InternalStimulus'),ParameterSet({})).analyse()
+        TrialAveragedFiringRate(param_filter_query(data_store,st_direct_stimulation_name=None,st_name='InternalStimulus'),ParameterSet({})).analyse()
         logger.info('1: ' + str(memory_usage_psutil()))
-        Irregularity(param_filter_query(data_store,st_direct_stimulation_name="None",st_name='InternalStimulus'),ParameterSet({})).analyse()
+        Irregularity(param_filter_query(data_store,st_direct_stimulation_name=None,st_name='InternalStimulus'),ParameterSet({})).analyse()
         
         
         PSTH(param_filter_query(data_store),ParameterSet({'bin_length' : 10.0 })).analyse()
@@ -47,18 +47,18 @@ def analysis(data_store,analog_ids,analog_ids_inh,analog_ids23=None,analog_ids_i
         
         logger.info('3: ' + str(memory_usage_psutil()))
         
-        PopulationMeanAndVar(param_filter_query(data_store,st_direct_stimulation_name="None",st_name='InternalStimulus'),ParameterSet({})).analyse()
+        PopulationMeanAndVar(param_filter_query(data_store,st_direct_stimulation_name=None,st_name='InternalStimulus'),ParameterSet({})).analyse()
 
 	dsv = queries.param_filter_query(data_store,st_name='FullfieldDriftingSinusoidalGrating',analysis_algorithm='PSTH')
 	TrialMean(dsv,ParameterSet({'cond_exc' : False, 'vm' : True, 'cond_inh' : False})).analyse()
                 
-        dsv = param_filter_query(data_store,st_name='FullfieldDriftingSinusoidalGrating',analysis_algorithm='TrialAveragedFiringRate',sheet_name=sheets)    
+        dsv = param_filter_query(data_store,st_name='FullfieldDriftingSinusoidalGrating',analysis_algorithm='TrialAveragedFiringRate',value_name='Firing rate',sheet_name=sheets)    
         GaussianTuningCurveFit(dsv,ParameterSet({'parameter_name' : 'orientation'})).analyse()
         dsv = param_filter_query(data_store,st_name='FullfieldDriftingSinusoidalGrating',sheet_name=sheets)
         Analog_F0andF1(dsv,ParameterSet({})).analyse()
 
         
-        dsv = param_filter_query(data_store,st_name='FullfieldDriftingSinusoidalGrating',analysis_algorithm='TrialAveragedFiringRate',sheet_name=sheets)  
+        dsv = param_filter_query(data_store,st_name='FullfieldDriftingSinusoidalGrating',analysis_algorithm='TrialAveragedFiringRate',value_name='Firing rate',sheet_name=sheets)  
         PeriodicTuningCurvePreferenceAndSelectivity_VectorAverage(dsv,ParameterSet({'parameter_name' : 'orientation'})).analyse()
         logger.info('4: ' + str(memory_usage_psutil()))
         #data_store.save()
@@ -86,38 +86,38 @@ def analysis(data_store,analog_ids,analog_ids_inh,analog_ids23=None,analog_ids_i
         
         logger.info('7: ' + str(memory_usage_psutil()))
         
-        dsv = param_filter_query(data_store,st_name='InternalStimulus',st_direct_stimulation_name="None")
+        dsv = param_filter_query(data_store,st_name='InternalStimulus',st_direct_stimulation_name=None)
         Analog_MeanSTDAndFanoFactor(dsv,ParameterSet({})).analyse()
 
-        pnv = param_filter_query(data_store,st_name='InternalStimulus',sheet_name='V1_Exc_L4',analysis_algorithm=['Analog_MeanSTDAndFanoFactor'],value_name='Mean(ECond)',st_direct_stimulation_name='None').get_analysis_result()[0]
+        pnv = param_filter_query(data_store,st_name='InternalStimulus',sheet_name='V1_Exc_L4',analysis_algorithm=['Analog_MeanSTDAndFanoFactor'],value_name='Mean(ECond)',st_direct_stimulation_name=None).get_analysis_result()[0]
         dsv = param_filter_query(data_store,st_name='FullfieldDriftingSinusoidalGrating',sheet_name='V1_Exc_L4',analysis_algorithm=['Analog_F0andF1'],value_name='F0_Exc_Cond')
         SubtractPNVfromPNVS(pnv,dsv,ParameterSet({})).analyse()
 
-        pnv = param_filter_query(data_store,st_name='InternalStimulus',sheet_name='V1_Exc_L4',analysis_algorithm=['Analog_MeanSTDAndFanoFactor'],value_name='Mean(ICond)',st_direct_stimulation_name='None').get_analysis_result()[0]
+        pnv = param_filter_query(data_store,st_name='InternalStimulus',sheet_name='V1_Exc_L4',analysis_algorithm=['Analog_MeanSTDAndFanoFactor'],value_name='Mean(ICond)',st_direct_stimulation_name=None).get_analysis_result()[0]
         dsv = param_filter_query(data_store,st_name='FullfieldDriftingSinusoidalGrating',sheet_name='V1_Exc_L4',analysis_algorithm=['Analog_F0andF1'],value_name='F0_Inh_Cond')
         SubtractPNVfromPNVS(pnv,dsv,ParameterSet({})).analyse()
 
-        pnv = param_filter_query(data_store,st_name='InternalStimulus',sheet_name='V1_Exc_L4',analysis_algorithm=['Analog_MeanSTDAndFanoFactor'],value_name='Mean(VM)',st_direct_stimulation_name='None').get_analysis_result()[0]
+        pnv = param_filter_query(data_store,st_name='InternalStimulus',sheet_name='V1_Exc_L4',analysis_algorithm=['Analog_MeanSTDAndFanoFactor'],value_name='Mean(VM)',st_direct_stimulation_name=None).get_analysis_result()[0]
         dsv = param_filter_query(data_store,st_name='FullfieldDriftingSinusoidalGrating',sheet_name='V1_Exc_L4',analysis_algorithm=['Analog_F0andF1'],value_name='F0_Vm')
         OperationPNVfromPNVS(pnv,lambda x,y: -(x+y),'-(x+y)',dsv,ParameterSet({})).analyse()
         
-        pnv = param_filter_query(data_store,st_name='InternalStimulus',sheet_name='V1_Inh_L4',analysis_algorithm=['Analog_MeanSTDAndFanoFactor'],value_name='Mean(ECond)',st_direct_stimulation_name='None').get_analysis_result()[0]
+        pnv = param_filter_query(data_store,st_name='InternalStimulus',sheet_name='V1_Inh_L4',analysis_algorithm=['Analog_MeanSTDAndFanoFactor'],value_name='Mean(ECond)',st_direct_stimulation_name=None).get_analysis_result()[0]
         dsv = param_filter_query(data_store,st_name='FullfieldDriftingSinusoidalGrating',sheet_name='V1_Inh_L4',analysis_algorithm=['Analog_F0andF1'],value_name='F0_Exc_Cond')
         SubtractPNVfromPNVS(pnv,dsv,ParameterSet({})).analyse()
 
-        pnv = param_filter_query(data_store,st_name='InternalStimulus',sheet_name='V1_Inh_L4',analysis_algorithm=['Analog_MeanSTDAndFanoFactor'],value_name='Mean(ICond)',st_direct_stimulation_name='None').get_analysis_result()[0]
+        pnv = param_filter_query(data_store,st_name='InternalStimulus',sheet_name='V1_Inh_L4',analysis_algorithm=['Analog_MeanSTDAndFanoFactor'],value_name='Mean(ICond)',st_direct_stimulation_name=None).get_analysis_result()[0]
         dsv = param_filter_query(data_store,st_name='FullfieldDriftingSinusoidalGrating',sheet_name='V1_Inh_L4',analysis_algorithm=['Analog_F0andF1'],value_name='F0_Inh_Cond')
         SubtractPNVfromPNVS(pnv,dsv,ParameterSet({})).analyse()
 
-        pnv = param_filter_query(data_store,st_name='InternalStimulus',sheet_name='V1_Inh_L4',analysis_algorithm=['Analog_MeanSTDAndFanoFactor'],value_name='Mean(VM)',st_direct_stimulation_name='None').get_analysis_result()[0]
+        pnv = param_filter_query(data_store,st_name='InternalStimulus',sheet_name='V1_Inh_L4',analysis_algorithm=['Analog_MeanSTDAndFanoFactor'],value_name='Mean(VM)',st_direct_stimulation_name=None).get_analysis_result()[0]
         dsv = param_filter_query(data_store,st_name='FullfieldDriftingSinusoidalGrating',sheet_name='V1_Inh_L4',analysis_algorithm=['Analog_F0andF1'],value_name='F0_Vm')
         OperationPNVfromPNVS(pnv,lambda x,y: -(x+y),'-(x+y)',dsv,ParameterSet({})).analyse()
 
-        pnv = param_filter_query(data_store,st_name='InternalStimulus',sheet_name='V1_Exc_L4',analysis_algorithm=['Analog_MeanSTDAndFanoFactor'],value_name='Mean(ECond)',st_direct_stimulation_name='None').get_analysis_result()[0]
+        pnv = param_filter_query(data_store,st_name='InternalStimulus',sheet_name='V1_Exc_L4',analysis_algorithm=['Analog_MeanSTDAndFanoFactor'],value_name='Mean(ECond)',st_direct_stimulation_name=None).get_analysis_result()[0]
         dsv = param_filter_query(data_store,st_name='DriftingSinusoidalGratingDisk',sheet_name='V1_Exc_L4',analysis_algorithm=['Analog_F0andF1'],value_name='F0_Exc_Cond')
         OperationPNVfromPNVS(pnv,lambda x,y: x-y,'x-y',dsv,ParameterSet({})).analyse()
 
-        pnv = param_filter_query(data_store,st_name='InternalStimulus',sheet_name='V1_Exc_L4',analysis_algorithm=['Analog_MeanSTDAndFanoFactor'],value_name='Mean(ICond)',st_direct_stimulation_name='None').get_analysis_result()[0]
+        pnv = param_filter_query(data_store,st_name='InternalStimulus',sheet_name='V1_Exc_L4',analysis_algorithm=['Analog_MeanSTDAndFanoFactor'],value_name='Mean(ICond)',st_direct_stimulation_name=None).get_analysis_result()[0]
         dsv = param_filter_query(data_store,st_name='DriftingSinusoidalGratingDisk',sheet_name='V1_Exc_L4',analysis_algorithm=['Analog_F0andF1'],value_name='F0_Inh_Cond')
         OperationPNVfromPNVS(pnv,lambda x,y: x-y,'x-y',dsv,ParameterSet({})).analyse()
 
@@ -125,35 +125,35 @@ def analysis(data_store,analog_ids,analog_ids_inh,analog_ids23=None,analog_ids_i
         logger.info('8: ' + str(memory_usage_psutil()))
         if l23_flag:
 
-            pnv = param_filter_query(data_store,st_name='InternalStimulus',sheet_name='V1_Exc_L2/3',analysis_algorithm=['Analog_MeanSTDAndFanoFactor'],value_name='Mean(ECond)',st_direct_stimulation_name='None').get_analysis_result()[0]
+            pnv = param_filter_query(data_store,st_name='InternalStimulus',sheet_name='V1_Exc_L2/3',analysis_algorithm=['Analog_MeanSTDAndFanoFactor'],value_name='Mean(ECond)',st_direct_stimulation_name=None).get_analysis_result()[0]
             dsv = param_filter_query(data_store,st_name='FullfieldDriftingSinusoidalGrating',sheet_name='V1_Exc_L2/3',analysis_algorithm=['Analog_F0andF1'],value_name='F0_Exc_Cond')
             SubtractPNVfromPNVS(pnv,dsv,ParameterSet({})).analyse()
 
-            pnv = param_filter_query(data_store,st_name='InternalStimulus',sheet_name='V1_Exc_L2/3',analysis_algorithm=['Analog_MeanSTDAndFanoFactor'],value_name='Mean(ICond)',st_direct_stimulation_name='None').get_analysis_result()[0]
+            pnv = param_filter_query(data_store,st_name='InternalStimulus',sheet_name='V1_Exc_L2/3',analysis_algorithm=['Analog_MeanSTDAndFanoFactor'],value_name='Mean(ICond)',st_direct_stimulation_name=None).get_analysis_result()[0]
             dsv = param_filter_query(data_store,st_name='FullfieldDriftingSinusoidalGrating',sheet_name='V1_Exc_L2/3',analysis_algorithm=['Analog_F0andF1'],value_name='F0_Inh_Cond')
             SubtractPNVfromPNVS(pnv,dsv,ParameterSet({})).analyse()
             
-            pnv = param_filter_query(data_store,st_name='InternalStimulus',sheet_name='V1_Exc_L2/3',analysis_algorithm=['Analog_MeanSTDAndFanoFactor'],value_name='Mean(VM)',st_direct_stimulation_name='None').get_analysis_result()[0]
+            pnv = param_filter_query(data_store,st_name='InternalStimulus',sheet_name='V1_Exc_L2/3',analysis_algorithm=['Analog_MeanSTDAndFanoFactor'],value_name='Mean(VM)',st_direct_stimulation_name=None).get_analysis_result()[0]
             dsv = param_filter_query(data_store,st_name='FullfieldDriftingSinusoidalGrating',sheet_name='V1_Exc_L2/3',analysis_algorithm=['Analog_F0andF1'],value_name='F0_Vm')
             OperationPNVfromPNVS(pnv,lambda x,y: -(x+y),'-(x+y)',dsv,ParameterSet({})).analyse()
             
-            pnv = param_filter_query(data_store,st_name='InternalStimulus',sheet_name='V1_Inh_L2/3',analysis_algorithm=['Analog_MeanSTDAndFanoFactor'],value_name='Mean(ECond)',st_direct_stimulation_name='None').get_analysis_result()[0]
+            pnv = param_filter_query(data_store,st_name='InternalStimulus',sheet_name='V1_Inh_L2/3',analysis_algorithm=['Analog_MeanSTDAndFanoFactor'],value_name='Mean(ECond)',st_direct_stimulation_name=None).get_analysis_result()[0]
             dsv = param_filter_query(data_store,st_name='FullfieldDriftingSinusoidalGrating',sheet_name='V1_Inh_L2/3',analysis_algorithm=['Analog_F0andF1'],value_name='F0_Exc_Cond')
             SubtractPNVfromPNVS(pnv,dsv,ParameterSet({})).analyse()
 
-            pnv = param_filter_query(data_store,st_name='InternalStimulus',sheet_name='V1_Inh_L2/3',analysis_algorithm=['Analog_MeanSTDAndFanoFactor'],value_name='Mean(ICond)',st_direct_stimulation_name='None').get_analysis_result()[0]
+            pnv = param_filter_query(data_store,st_name='InternalStimulus',sheet_name='V1_Inh_L2/3',analysis_algorithm=['Analog_MeanSTDAndFanoFactor'],value_name='Mean(ICond)',st_direct_stimulation_name=None).get_analysis_result()[0]
             dsv = param_filter_query(data_store,st_name='FullfieldDriftingSinusoidalGrating',sheet_name='V1_Inh_L2/3',analysis_algorithm=['Analog_F0andF1'],value_name='F0_Inh_Cond')
             SubtractPNVfromPNVS(pnv,dsv,ParameterSet({})).analyse()
 
-            pnv = param_filter_query(data_store,st_name='InternalStimulus',sheet_name='V1_Inh_L2/3',analysis_algorithm=['Analog_MeanSTDAndFanoFactor'],value_name='Mean(VM)',st_direct_stimulation_name='None').get_analysis_result()[0]
+            pnv = param_filter_query(data_store,st_name='InternalStimulus',sheet_name='V1_Inh_L2/3',analysis_algorithm=['Analog_MeanSTDAndFanoFactor'],value_name='Mean(VM)',st_direct_stimulation_name=None).get_analysis_result()[0]
             dsv = param_filter_query(data_store,st_name='FullfieldDriftingSinusoidalGrating',sheet_name='V1_Inh_L2/3',analysis_algorithm=['Analog_F0andF1'],value_name='F0_Vm')
             OperationPNVfromPNVS(pnv,lambda x,y: -(x+y),'-(x+y)',dsv,ParameterSet({})).analyse()
 
-            pnv = param_filter_query(data_store,st_name='InternalStimulus',sheet_name='V1_Exc_L2/3',analysis_algorithm=['Analog_MeanSTDAndFanoFactor'],value_name='Mean(ECond)',st_direct_stimulation_name='None').get_analysis_result()[0]
+            pnv = param_filter_query(data_store,st_name='InternalStimulus',sheet_name='V1_Exc_L2/3',analysis_algorithm=['Analog_MeanSTDAndFanoFactor'],value_name='Mean(ECond)',st_direct_stimulation_name=None).get_analysis_result()[0]
             dsv = param_filter_query(data_store,st_name='DriftingSinusoidalGratingDisk',sheet_name='V1_Exc_L2/3',analysis_algorithm=['Analog_F0andF1'],value_name='F0_Exc_Cond')
             OperationPNVfromPNVS(pnv,lambda x,y: x-y,'x-y',dsv,ParameterSet({})).analyse()
 
-            pnv = param_filter_query(data_store,st_name='InternalStimulus',sheet_name='V1_Exc_L2/3',analysis_algorithm=['Analog_MeanSTDAndFanoFactor'],value_name='Mean(ICond)',st_direct_stimulation_name='None').get_analysis_result()[0]
+            pnv = param_filter_query(data_store,st_name='InternalStimulus',sheet_name='V1_Exc_L2/3',analysis_algorithm=['Analog_MeanSTDAndFanoFactor'],value_name='Mean(ICond)',st_direct_stimulation_name=None).get_analysis_result()[0]
             dsv = param_filter_query(data_store,st_name='DriftingSinusoidalGratingDisk',sheet_name='V1_Exc_L2/3',analysis_algorithm=['Analog_F0andF1'],value_name='F0_Inh_Cond')
             OperationPNVfromPNVS(pnv,lambda x,y: x-y,'x-y',dsv,ParameterSet({})).analyse()
 
@@ -166,18 +166,18 @@ def analysis(data_store,analog_ids,analog_ids_inh,analog_ids23=None,analog_ids_i
         if True:
     	    logger.info('10: ' + str(memory_usage_psutil()))
         
-    	    TrialToTrialCrossCorrelationOfAnalogSignalList(param_filter_query(data_store,sheet_name='V1_Exc_L4',st_name="NaturalImageWithEyeMovement",analysis_algorithm='ActionPotentialRemoval'),ParameterSet({'neurons' : list(analog_ids)})).analyse()
-	    TrialToTrialCrossCorrelationOfAnalogSignalList(param_filter_query(data_store,sheet_name='V1_Exc_L4',st_name="NaturalImageWithEyeMovement",analysis_algorithm='PSTH'),ParameterSet({'neurons' : list(analog_ids)})).analyse()
-    	    TrialToTrialCrossCorrelationOfAnalogSignalList(param_filter_query(data_store,sheet_name='V1_Exc_L4',st_name='FullfieldDriftingSinusoidalGrating',analysis_algorithm='ActionPotentialRemoval',st_contrast=100),ParameterSet({'neurons' : list(analog_ids)})).analyse()
-    	    TrialToTrialCrossCorrelationOfAnalogSignalList(param_filter_query(data_store,sheet_name='V1_Exc_L4',st_name='FullfieldDriftingSinusoidalGrating',analysis_algorithm='PSTH',st_contrast=100),ParameterSet({'neurons' : list(analog_ids)})).analyse()
+    	    TrialToTrialCrossCorrelationOfAnalogSignalList(param_filter_query(data_store,sheet_name='V1_Exc_L4',st_name="NaturalImageWithEyeMovement",analysis_algorithm='ActionPotentialRemoval'),ParameterSet({'neurons' : list(analog_ids), 'window_min' : 0 , 'window_max' : -1})).analyse()
+	    TrialToTrialCrossCorrelationOfAnalogSignalList(param_filter_query(data_store,sheet_name='V1_Exc_L4',st_name="NaturalImageWithEyeMovement",analysis_algorithm='PSTH'),ParameterSet({'neurons' : list(analog_ids), 'window_min' : 0 , 'window_max' : -1})).analyse()
+    	    TrialToTrialCrossCorrelationOfAnalogSignalList(param_filter_query(data_store,sheet_name='V1_Exc_L4',st_name='FullfieldDriftingSinusoidalGrating',analysis_algorithm='ActionPotentialRemoval',st_contrast=100),ParameterSet({'neurons' : list(analog_ids), 'window_min' : 0 , 'window_max' : -1})).analyse()
+    	    TrialToTrialCrossCorrelationOfAnalogSignalList(param_filter_query(data_store,sheet_name='V1_Exc_L4',st_name='FullfieldDriftingSinusoidalGrating',analysis_algorithm='PSTH',st_contrast=100),ParameterSet({'neurons' : list(analog_ids), 'window_min' : 0 , 'window_max' : -1})).analyse()
 
         
     	    logger.info('11: ' + str(memory_usage_psutil()))
     	    if l23_flag:
-    	        TrialToTrialCrossCorrelationOfAnalogSignalList(param_filter_query(data_store,sheet_name='V1_Exc_L2/3',st_name="NaturalImageWithEyeMovement",analysis_algorithm='ActionPotentialRemoval'),ParameterSet({'neurons' : list(analog_ids23)})).analyse()
-    	        TrialToTrialCrossCorrelationOfAnalogSignalList(param_filter_query(data_store,sheet_name='V1_Exc_L2/3',st_name="NaturalImageWithEyeMovement",analysis_algorithm='PSTH'),ParameterSet({'neurons' : list(analog_ids23)})).analyse()
-    	        TrialToTrialCrossCorrelationOfAnalogSignalList(param_filter_query(data_store,sheet_name='V1_Exc_L2/3',st_name='FullfieldDriftingSinusoidalGrating',analysis_algorithm='ActionPotentialRemoval',st_contrast=100),ParameterSet({'neurons' : list(analog_ids23)})).analyse()
-    	        TrialToTrialCrossCorrelationOfAnalogSignalList(param_filter_query(data_store,sheet_name='V1_Exc_L2/3',st_name='FullfieldDriftingSinusoidalGrating',analysis_algorithm='PSTH',st_contrast=100),ParameterSet({'neurons' : list(analog_ids23)})).analyse()
+    	        TrialToTrialCrossCorrelationOfAnalogSignalList(param_filter_query(data_store,sheet_name='V1_Exc_L2/3',st_name="NaturalImageWithEyeMovement",analysis_algorithm='ActionPotentialRemoval'),ParameterSet({'neurons' : list(analog_ids23), 'window_min' : 0 , 'window_max' : -1})).analyse()
+    	        TrialToTrialCrossCorrelationOfAnalogSignalList(param_filter_query(data_store,sheet_name='V1_Exc_L2/3',st_name="NaturalImageWithEyeMovement",analysis_algorithm='PSTH'),ParameterSet({'neurons' : list(analog_ids23), 'window_min' : 0 , 'window_max' : -1})).analyse()
+    	        TrialToTrialCrossCorrelationOfAnalogSignalList(param_filter_query(data_store,sheet_name='V1_Exc_L2/3',st_name='FullfieldDriftingSinusoidalGrating',analysis_algorithm='ActionPotentialRemoval',st_contrast=100),ParameterSet({'neurons' : list(analog_ids23), 'window_min' : 0 , 'window_max' : -1})).analyse()
+    	        TrialToTrialCrossCorrelationOfAnalogSignalList(param_filter_query(data_store,sheet_name='V1_Exc_L2/3',st_name='FullfieldDriftingSinusoidalGrating',analysis_algorithm='PSTH',st_contrast=100),ParameterSet({'neurons' : list(analog_ids23), 'window_min' : 0 , 'window_max' : -1})).analyse()
     	    logger.info('12: ' + str(memory_usage_psutil()))
 
         dsv = param_filter_query(data_store,analysis_algorithm='ActionPotentialRemoval')
@@ -187,7 +187,7 @@ def analysis(data_store,analog_ids,analog_ids_inh,analog_ids23=None,analog_ids_i
        
         logger.info('14: ' + str(memory_usage_psutil()))
         
-        dsv = param_filter_query(data_store,st_name='FullfieldDriftingSinusoidalGrating',analysis_algorithm='TrialAveragedFiringRate')    
+        dsv = param_filter_query(data_store,st_name='FullfieldDriftingSinusoidalGrating',analysis_algorithm='TrialAveragedFiringRate',value_name='Firing rate')    
         CircularVarianceOfTuningCurve(dsv,ParameterSet({'parameter_name' : 'orientation'})).analyse()
         
 	dsv = param_filter_query(data_store,st_name='FullfieldDriftingSinusoidalGrating',value_name=['F1(psth (bin=10.0) trial-to-trial mean)'],analysis_algorithm='Analog_F0andF1',sheet_name=sheets)    
@@ -360,14 +360,14 @@ def perform_analysis_and_visualization_or(data_store):
             #dsv = param_filter_query(data_store,sheet_name = 'V1_Exc_L2/3',st_contrast=100)    
             #FanoFactor_Baudot_et_al(dsv,ParameterSet({}),plot_file_name='FanoFactorL23.png').plot()
             if True:
-                pref_fr_100 = param_filter_query(data_store,sheet_name=['V1_Exc_L4'],st_contrast=[100],analysis_algorithm=['TrialAveragedFiringRate'],st_orientation=[0],ads_unique=True).get_analysis_result()[0].get_value_by_id(l4_exc_or_many)
-                ort_fr_100 = param_filter_query(data_store,sheet_name=['V1_Exc_L4'],st_contrast=[100],analysis_algorithm=['TrialAveragedFiringRate'],st_orientation=[numpy.pi/2],ads_unique=True).get_analysis_result()[0].get_value_by_id(l4_exc_or_many)
+                pref_fr_100 = param_filter_query(data_store,sheet_name=['V1_Exc_L4'],st_contrast=[100],analysis_algorithm=['TrialAveragedFiringRate'],value_name='Firing rate',st_orientation=[0],ads_unique=True).get_analysis_result()[0].get_value_by_id(l4_exc_or_many)
+                ort_fr_100 = param_filter_query(data_store,sheet_name=['V1_Exc_L4'],st_contrast=[100],analysis_algorithm=['TrialAveragedFiringRate'],value_name='Firing rate',st_orientation=[numpy.pi/2],ads_unique=True).get_analysis_result()[0].get_value_by_id(l4_exc_or_many)
                 pref_fr_50 = 0
                 ort_fr_50 = 0
-                if len(param_filter_query(data_store,sheet_name=['V1_Exc_L4'],st_contrast=[10],analysis_algorithm=['TrialAveragedFiringRate'],st_orientation=[0]).get_analysis_result()) != 0:    
-                    pref_fr_50 = param_filter_query(data_store,sheet_name=['V1_Exc_L4'],st_contrast=[10],analysis_algorithm=['TrialAveragedFiringRate'],st_orientation=[0],ads_unique=True).get_analysis_result()[0].get_value_by_id(l4_exc_or_many)
-                    ort_fr_50 = param_filter_query(data_store,sheet_name=['V1_Exc_L4'],st_contrast=[10],analysis_algorithm=['TrialAveragedFiringRate'],st_orientation=[numpy.pi/2],ads_unique=True).get_analysis_result()[0].get_value_by_id(l4_exc_or_many)
-                spont = param_filter_query(data_store,st_name='InternalStimulus',sheet_name=['V1_Exc_L4'],analysis_algorithm=['TrialAveragedFiringRate'],ads_unique=True).get_analysis_result()[0].get_value_by_id(l4_exc_or_many)
+                if len(param_filter_query(data_store,sheet_name=['V1_Exc_L4'],st_contrast=[10],analysis_algorithm=['TrialAveragedFiringRate'],value_name='Firing rate',st_orientation=[0]).get_analysis_result()) != 0:    
+                    pref_fr_50 = param_filter_query(data_store,sheet_name=['V1_Exc_L4'],st_contrast=[10],analysis_algorithm=['TrialAveragedFiringRate'],value_name='Firing rate',st_orientation=[0],ads_unique=True).get_analysis_result()[0].get_value_by_id(l4_exc_or_many)
+                    ort_fr_50 = param_filter_query(data_store,sheet_name=['V1_Exc_L4'],st_contrast=[10],analysis_algorithm=['TrialAveragedFiringRate'],value_name='Firing rate',st_orientation=[numpy.pi/2],ads_unique=True).get_analysis_result()[0].get_value_by_id(l4_exc_or_many)
+                spont = param_filter_query(data_store,st_name='InternalStimulus',sheet_name=['V1_Exc_L4'],analysis_algorithm=['TrialAveragedFiringRate'],value_name='Firing rate',ads_unique=True).get_analysis_result()[0].get_value_by_id(l4_exc_or_many)
 
                 pylab.figure()
                 pylab.bar([1,2,3,4,5],[numpy.mean(pref_fr_100),numpy.mean(ort_fr_100),numpy.mean(pref_fr_50),numpy.mean(ort_fr_50),numpy.mean(spont)])
@@ -377,14 +377,14 @@ def perform_analysis_and_visualization_or(data_store):
 
                 pylab.savefig(Global.root_directory+"Orientation_responseL4.png")
 
-                pref_fr_100 = param_filter_query(data_store,sheet_name=['V1_Inh_L4'],st_contrast=[100],analysis_algorithm=['TrialAveragedFiringRate'],st_orientation=[0],ads_unique=True).get_analysis_result()[0].get_value_by_id(l4_inh_or_many)
-                ort_fr_100 = param_filter_query(data_store,sheet_name=['V1_Inh_L4'],st_contrast=[100],analysis_algorithm=['TrialAveragedFiringRate'],st_orientation=[numpy.pi/2],ads_unique=True).get_analysis_result()[0].get_value_by_id(l4_inh_or_many)
+                pref_fr_100 = param_filter_query(data_store,sheet_name=['V1_Inh_L4'],st_contrast=[100],analysis_algorithm=['TrialAveragedFiringRate'],value_name='Firing rate',st_orientation=[0],ads_unique=True).get_analysis_result()[0].get_value_by_id(l4_inh_or_many)
+                ort_fr_100 = param_filter_query(data_store,sheet_name=['V1_Inh_L4'],st_contrast=[100],analysis_algorithm=['TrialAveragedFiringRate'],value_name='Firing rate',st_orientation=[numpy.pi/2],ads_unique=True).get_analysis_result()[0].get_value_by_id(l4_inh_or_many)
                 pref_fr_50 = 0
                 ort_fr_50 = 0
-                if len(param_filter_query(data_store,sheet_name=['V1_Inh_L4'],st_contrast=[10],analysis_algorithm=['TrialAveragedFiringRate'],st_orientation=[0]).get_analysis_result()) != 0:    
-                    pref_fr_50 = param_filter_query(data_store,sheet_name=['V1_Inh_L4'],st_contrast=[10],analysis_algorithm=['TrialAveragedFiringRate'],st_orientation=[0],ads_unique=True).get_analysis_result()[0].get_value_by_id(l4_inh_or_many)
-                    ort_fr_50 = param_filter_query(data_store,sheet_name=['V1_Inh_L4'],st_contrast=[10],analysis_algorithm=['TrialAveragedFiringRate'],st_orientation=[numpy.pi/2],ads_unique=True).get_analysis_result()[0].get_value_by_id(l4_inh_or_many)
-                spont = param_filter_query(data_store,st_name='InternalStimulus',sheet_name=['V1_Inh_L4'],analysis_algorithm=['TrialAveragedFiringRate'],ads_unique=True).get_analysis_result()[0].get_value_by_id(l4_inh_or_many)
+                if len(param_filter_query(data_store,sheet_name=['V1_Inh_L4'],st_contrast=[10],analysis_algorithm=['TrialAveragedFiringRate'],value_name='Firing rate',st_orientation=[0]).get_analysis_result()) != 0:    
+                    pref_fr_50 = param_filter_query(data_store,sheet_name=['V1_Inh_L4'],st_contrast=[10],analysis_algorithm=['TrialAveragedFiringRate'],value_name='Firing rate',st_orientation=[0],ads_unique=True).get_analysis_result()[0].get_value_by_id(l4_inh_or_many)
+                    ort_fr_50 = param_filter_query(data_store,sheet_name=['V1_Inh_L4'],st_contrast=[10],analysis_algorithm=['TrialAveragedFiringRate'],value_name='Firing rate',st_orientation=[numpy.pi/2],ads_unique=True).get_analysis_result()[0].get_value_by_id(l4_inh_or_many)
+                spont = param_filter_query(data_store,st_name='InternalStimulus',sheet_name=['V1_Inh_L4'],analysis_algorithm=['TrialAveragedFiringRate'],value_name='Firing rate',ads_unique=True).get_analysis_result()[0].get_value_by_id(l4_inh_or_many)
 
                 pylab.figure()
                 pylab.bar([1,2,3,4,5],[numpy.mean(pref_fr_100),numpy.mean(ort_fr_100),numpy.mean(pref_fr_50),numpy.mean(ort_fr_50),numpy.mean(spont)])
@@ -396,15 +396,15 @@ def perform_analysis_and_visualization_or(data_store):
 
                 
                 if l23:
-                    pref_fr_100 = param_filter_query(data_store,sheet_name=['V1_Exc_L2/3'],st_contrast=[100],analysis_algorithm=['TrialAveragedFiringRate'],st_orientation=[0],ads_unique=True).get_analysis_result()[0].get_value_by_id(l23_exc_or_many)
-                    ort_fr_100 = param_filter_query(data_store,sheet_name=['V1_Exc_L2/3'],st_contrast=[100],analysis_algorithm=['TrialAveragedFiringRate'],st_orientation=[numpy.pi/2],ads_unique=True).get_analysis_result()[0].get_value_by_id(l23_exc_or_many)
+                    pref_fr_100 = param_filter_query(data_store,sheet_name=['V1_Exc_L2/3'],st_contrast=[100],analysis_algorithm=['TrialAveragedFiringRate'],value_name='Firing rate',st_orientation=[0],ads_unique=True).get_analysis_result()[0].get_value_by_id(l23_exc_or_many)
+                    ort_fr_100 = param_filter_query(data_store,sheet_name=['V1_Exc_L2/3'],st_contrast=[100],analysis_algorithm=['TrialAveragedFiringRate'],value_name='Firing rate',st_orientation=[numpy.pi/2],ads_unique=True).get_analysis_result()[0].get_value_by_id(l23_exc_or_many)
                     pref_fr_50 = 0
                     ort_fr_50 = 0
                     
-                    if(len(param_filter_query(data_store,sheet_name=['V1_Exc_L2/3'],st_contrast=[10],analysis_algorithm=['TrialAveragedFiringRate'],st_orientation=[0]).get_analysis_result())!=0):
-                        pref_fr_50 = param_filter_query(data_store,sheet_name=['V1_Exc_L2/3'],st_contrast=[10],analysis_algorithm=['TrialAveragedFiringRate'],st_orientation=[0],ads_unique=True).get_analysis_result()[0].get_value_by_id(l23_exc_or_many)
-                        ort_fr_50 = param_filter_query(data_store,sheet_name=['V1_Exc_L2/3'],st_contrast=[10],analysis_algorithm=['TrialAveragedFiringRate'],st_orientation=[numpy.pi/2],ads_unique=True).get_analysis_result()[0].get_value_by_id(l23_exc_or_many)
-                    spont = param_filter_query(data_store,st_name='InternalStimulus',sheet_name=['V1_Exc_L2/3'],analysis_algorithm=['TrialAveragedFiringRate'],ads_unique=True).get_analysis_result()[0].get_value_by_id(l23_exc_or_many)
+                    if(len(param_filter_query(data_store,sheet_name=['V1_Exc_L2/3'],st_contrast=[10],analysis_algorithm=['TrialAveragedFiringRate'],value_name='Firing rate',st_orientation=[0]).get_analysis_result())!=0):
+                        pref_fr_50 = param_filter_query(data_store,sheet_name=['V1_Exc_L2/3'],st_contrast=[10],analysis_algorithm=['TrialAveragedFiringRate'],value_name='Firing rate',st_orientation=[0],ads_unique=True).get_analysis_result()[0].get_value_by_id(l23_exc_or_many)
+                        ort_fr_50 = param_filter_query(data_store,sheet_name=['V1_Exc_L2/3'],st_contrast=[10],analysis_algorithm=['TrialAveragedFiringRate'],value_name='Firing rate',st_orientation=[numpy.pi/2],ads_unique=True).get_analysis_result()[0].get_value_by_id(l23_exc_or_many)
+                    spont = param_filter_query(data_store,st_name='InternalStimulus',sheet_name=['V1_Exc_L2/3'],analysis_algorithm=['TrialAveragedFiringRate'],value_name='Firing rate',ads_unique=True).get_analysis_result()[0].get_value_by_id(l23_exc_or_many)
 
                     pylab.figure()
                     pylab.bar([1,2,3,4,5],[numpy.mean(pref_fr_100),numpy.mean(ort_fr_100),numpy.mean(pref_fr_50),numpy.mean(ort_fr_50),numpy.mean(spont)])
@@ -415,15 +415,15 @@ def perform_analysis_and_visualization_or(data_store):
                     pylab.savefig(Global.root_directory+"Orientation_responseL23.png")
 
 
-                    pref_fr_100 = param_filter_query(data_store,sheet_name=['V1_Inh_L2/3'],st_contrast=[100],analysis_algorithm=['TrialAveragedFiringRate'],st_orientation=[0],ads_unique=True).get_analysis_result()[0].get_value_by_id(l23_inh_or_many)
-                    ort_fr_100 = param_filter_query(data_store,sheet_name=['V1_Inh_L2/3'],st_contrast=[100],analysis_algorithm=['TrialAveragedFiringRate'],st_orientation=[numpy.pi/2],ads_unique=True).get_analysis_result()[0].get_value_by_id(l23_inh_or_many)
+                    pref_fr_100 = param_filter_query(data_store,sheet_name=['V1_Inh_L2/3'],st_contrast=[100],analysis_algorithm=['TrialAveragedFiringRate'],value_name='Firing rate',st_orientation=[0],ads_unique=True).get_analysis_result()[0].get_value_by_id(l23_inh_or_many)
+                    ort_fr_100 = param_filter_query(data_store,sheet_name=['V1_Inh_L2/3'],st_contrast=[100],analysis_algorithm=['TrialAveragedFiringRate'],value_name='Firing rate',st_orientation=[numpy.pi/2],ads_unique=True).get_analysis_result()[0].get_value_by_id(l23_inh_or_many)
                     pref_fr_50 = 0
                     ort_fr_50 = 0
                     
-                    if(len(param_filter_query(data_store,sheet_name=['V1_Inh_L2/3'],st_contrast=[10],analysis_algorithm=['TrialAveragedFiringRate'],st_orientation=[0]).get_analysis_result())!=0):
-                        pref_fr_50 = param_filter_query(data_store,sheet_name=['V1_Inh_L2/3'],st_contrast=[10],analysis_algorithm=['TrialAveragedFiringRate'],st_orientation=[0],ads_unique=True).get_analysis_result()[0].get_value_by_id(l23_inh_or_many)
-                        ort_fr_50 = param_filter_query(data_store,sheet_name=['V1_Inh_L2/3'],st_contrast=[10],analysis_algorithm=['TrialAveragedFiringRate'],st_orientation=[numpy.pi/2],ads_unique=True).get_analysis_result()[0].get_value_by_id(l23_inh_or_many)
-                    spont = param_filter_query(data_store,st_name='InternalStimulus',sheet_name=['V1_Inh_L2/3'],analysis_algorithm=['TrialAveragedFiringRate'],ads_unique=True).get_analysis_result()[0].get_value_by_id(l23_inh_or_many)
+                    if(len(param_filter_query(data_store,sheet_name=['V1_Inh_L2/3'],st_contrast=[10],analysis_algorithm=['TrialAveragedFiringRate'],value_name='Firing rate',st_orientation=[0]).get_analysis_result())!=0):
+                        pref_fr_50 = param_filter_query(data_store,sheet_name=['V1_Inh_L2/3'],st_contrast=[10],analysis_algorithm=['TrialAveragedFiringRate'],value_name='Firing rate',st_orientation=[0],ads_unique=True).get_analysis_result()[0].get_value_by_id(l23_inh_or_many)
+                        ort_fr_50 = param_filter_query(data_store,sheet_name=['V1_Inh_L2/3'],st_contrast=[10],analysis_algorithm=['TrialAveragedFiringRate'],value_name='Firing rate',st_orientation=[numpy.pi/2],ads_unique=True).get_analysis_result()[0].get_value_by_id(l23_inh_or_many)
+                    spont = param_filter_query(data_store,st_name='InternalStimulus',sheet_name=['V1_Inh_L2/3'],analysis_algorithm=['TrialAveragedFiringRate'],value_name='Firing rate',ads_unique=True).get_analysis_result()[0].get_value_by_id(l23_inh_or_many)
 
                     pylab.figure()
                     pylab.bar([1,2,3,4,5],[numpy.mean(pref_fr_100),numpy.mean(ort_fr_100),numpy.mean(pref_fr_50),numpy.mean(ort_fr_50),numpy.mean(spont)])
@@ -524,43 +524,43 @@ def perform_analysis_and_visualization_stc(data_store):
     dsv = param_filter_query(data_store,sheet_name=['V1_Exc_L4','V1_Exc_L2/3'],st_name='DriftingSinusoidalGratingDisk')
     Analog_F0andF1(dsv,ParameterSet({})).analyse()
 
-    dsv = param_filter_query(data_store,st_name='InternalStimulus',st_direct_stimulation_name="None")
+    dsv = param_filter_query(data_store,st_name='InternalStimulus',st_direct_stimulation_name=None)
     Analog_MeanSTDAndFanoFactor(dsv,ParameterSet({})).analyse()
 
-    pnv = param_filter_query(data_store,st_name='InternalStimulus',sheet_name='V1_Exc_L4',analysis_algorithm=['Analog_MeanSTDAndFanoFactor'],value_name='Mean(VM)',st_direct_stimulation_name='None').get_analysis_result()[0]
+    pnv = param_filter_query(data_store,st_name='InternalStimulus',sheet_name='V1_Exc_L4',analysis_algorithm=['Analog_MeanSTDAndFanoFactor'],value_name='Mean(VM)',st_direct_stimulation_name=None).get_analysis_result()[0]
     dsv = param_filter_query(data_store,st_name='DriftingSinusoidalGratingDisk',sheet_name='V1_Exc_L4',analysis_algorithm=['Analog_F0andF1'],value_name='F0_Vm')
     OperationPNVfromPNVS(pnv,lambda x,y: -(x+y),'-(x+y)',dsv,ParameterSet({})).analyse()
 
-    pnv = param_filter_query(data_store,st_name='InternalStimulus',sheet_name='V1_Exc_L4',analysis_algorithm=['Analog_MeanSTDAndFanoFactor'],value_name='Mean(ECond)',st_direct_stimulation_name='None').get_analysis_result()[0]
+    pnv = param_filter_query(data_store,st_name='InternalStimulus',sheet_name='V1_Exc_L4',analysis_algorithm=['Analog_MeanSTDAndFanoFactor'],value_name='Mean(ECond)',st_direct_stimulation_name=None).get_analysis_result()[0]
     dsv = param_filter_query(data_store,st_name='DriftingSinusoidalGratingDisk',sheet_name='V1_Exc_L4',analysis_algorithm=['Analog_F0andF1'],value_name='F0_Exc_Cond')
     OperationPNVfromPNVS(pnv,lambda x,y: x-y,'x-y',dsv,ParameterSet({})).analyse()
 
-    pnv = param_filter_query(data_store,st_name='InternalStimulus',sheet_name='V1_Exc_L4',analysis_algorithm=['Analog_MeanSTDAndFanoFactor'],value_name='Mean(ICond)',st_direct_stimulation_name='None').get_analysis_result()[0]
+    pnv = param_filter_query(data_store,st_name='InternalStimulus',sheet_name='V1_Exc_L4',analysis_algorithm=['Analog_MeanSTDAndFanoFactor'],value_name='Mean(ICond)',st_direct_stimulation_name=None).get_analysis_result()[0]
     dsv = param_filter_query(data_store,st_name='DriftingSinusoidalGratingDisk',sheet_name='V1_Exc_L4',analysis_algorithm=['Analog_F0andF1'],value_name='F0_Inh_Cond')
     OperationPNVfromPNVS(pnv,lambda x,y: x-y,'x-y',dsv,ParameterSet({})).analyse()
 
 
     if l23:
-        pnv = param_filter_query(data_store,st_name='InternalStimulus',sheet_name='V1_Exc_L2/3',analysis_algorithm=['Analog_MeanSTDAndFanoFactor'],value_name='Mean(VM)',st_direct_stimulation_name='None').get_analysis_result()[0]
+        pnv = param_filter_query(data_store,st_name='InternalStimulus',sheet_name='V1_Exc_L2/3',analysis_algorithm=['Analog_MeanSTDAndFanoFactor'],value_name='Mean(VM)',st_direct_stimulation_name=None).get_analysis_result()[0]
         dsv = param_filter_query(data_store,st_name='DriftingSinusoidalGratingDisk',sheet_name='V1_Exc_L2/3',analysis_algorithm=['Analog_F0andF1'],value_name='F0_Vm')
         OperationPNVfromPNVS(pnv,lambda x,y: -(x+y),'-(x+y)',dsv,ParameterSet({})).analyse()
 	
-	pnv = param_filter_query(data_store,st_name='InternalStimulus',sheet_name='V1_Exc_L2/3',analysis_algorithm=['Analog_MeanSTDAndFanoFactor'],value_name='Mean(ECond)',st_direct_stimulation_name='None').get_analysis_result()[0]
+	pnv = param_filter_query(data_store,st_name='InternalStimulus',sheet_name='V1_Exc_L2/3',analysis_algorithm=['Analog_MeanSTDAndFanoFactor'],value_name='Mean(ECond)',st_direct_stimulation_name=None).get_analysis_result()[0]
         dsv = param_filter_query(data_store,st_name='DriftingSinusoidalGratingDisk',sheet_name='V1_Exc_L2/3',analysis_algorithm=['Analog_F0andF1'],value_name='F0_Exc_Cond')
         OperationPNVfromPNVS(pnv,lambda x,y: x-y,'x-y',dsv,ParameterSet({})).analyse()
 
-        pnv = param_filter_query(data_store,st_name='InternalStimulus',sheet_name='V1_Exc_L2/3',analysis_algorithm=['Analog_MeanSTDAndFanoFactor'],value_name='Mean(ICond)',st_direct_stimulation_name='None').get_analysis_result()[0]
+        pnv = param_filter_query(data_store,st_name='InternalStimulus',sheet_name='V1_Exc_L2/3',analysis_algorithm=['Analog_MeanSTDAndFanoFactor'],value_name='Mean(ICond)',st_direct_stimulation_name=None).get_analysis_result()[0]
         dsv = param_filter_query(data_store,st_name='DriftingSinusoidalGratingDisk',sheet_name='V1_Exc_L2/3',analysis_algorithm=['Analog_F0andF1'],value_name='F0_Inh_Cond')    
         OperationPNVfromPNVS(pnv,lambda x,y: x-y,'x-y',dsv,ParameterSet({})).analyse()
     
-    dsv = param_filter_query(data_store,st_name='DriftingSinusoidalGratingDisk',analysis_algorithm='TrialAveragedFiringRate')    
+    dsv = param_filter_query(data_store,st_name='DriftingSinusoidalGratingDisk',analysis_algorithm='TrialAveragedFiringRate',value_name='Firing rate')    
 
     SizeTuningAnalysis(dsv,ParameterSet({'neurons' : center4.tolist(), 'sheet_name' : 'V1_Exc_L4'})).analyse()
     if l23:
         SizeTuningAnalysis(dsv,ParameterSet({'neurons' : center23.tolist(), 'sheet_name' : 'V1_Exc_L2/3'})).analyse()        
     data_store.save()
 
-    dsv = param_filter_query(data_store,st_name='DriftingSinusoidalGratingDisk',analysis_algorithm=['TrialAveragedFiringRate'])    
+    dsv = param_filter_query(data_store,st_name='DriftingSinusoidalGratingDisk',analysis_algorithm=['TrialAveragedFiringRate'],value_name="Firing rate")    
     PlotTuningCurve(dsv,ParameterSet({'parameter_name' : 'radius', 'neurons': list(center4), 'sheet_name' : 'V1_Exc_L4','centered'  : False,'mean' : False, 'polar' : False, 'pool'  : False}),plot_file_name='SizeTuningExcL4.png',fig_param={'dpi' : 100,'figsize': (32,7)}).plot()
     PlotTuningCurve(dsv,ParameterSet({'parameter_name' : 'radius', 'neurons': list(center4), 'sheet_name' : 'V1_Exc_L4','centered'  : False,'mean' : True, 'polar' : False, 'pool'  : False}),plot_file_name='SizeTuningExcL4M.png',fig_param={'dpi' : 100,'figsize': (32,7)}).plot()
     
@@ -649,7 +649,7 @@ def perform_analysis_and_visualization_octc(data_store):
 
     TrialAveragedFiringRate(param_filter_query(data_store,sheet_name=['V1_Exc_L4','V1_Inh_L4','V1_Exc_L2/3','V1_Inh_L2/3'],st_name='DriftingSinusoidalGratingCenterSurroundStimulus'),ParameterSet({})).analyse()
     
-    dsv = param_filter_query(data_store,st_name='DriftingSinusoidalGratingCenterSurroundStimulus',analysis_algorithm=['TrialAveragedFiringRate'])    
+    dsv = param_filter_query(data_store,st_name='DriftingSinusoidalGratingCenterSurroundStimulus',analysis_algorithm=['TrialAveragedFiringRate'],value_name="Firing rate")    
     logger.info(center23)
     PlotTuningCurve(dsv,ParameterSet({'parameter_name' : 'surround_orientation', 'neurons': list(center4), 'sheet_name' : 'V1_Exc_L4','centered'  : False,'mean' : True, 'polar' : False, 'pool'  : False}),plot_file_name='OCTCExcL4M.png',fig_param={'dpi' : 100,'figsize': (32,15)}).plot()
     PlotTuningCurve(dsv,ParameterSet({'parameter_name' : 'surround_orientation', 'neurons': list(center23), 'sheet_name' : 'V1_Exc_L2/3','centered'  : False,'mean' : True, 'polar' : False, 'pool'  : False}),plot_file_name='OCTCExcL23M.png',fig_param={'dpi' : 100,'figsize': (32,15)}).plot()        
@@ -758,11 +758,11 @@ def perform_analysis_and_visualization(data_store):
 
         
     if False:
-            pref_fr_100 = param_filter_query(data_store,sheet_name=['V1_Exc_L4'],st_contrast=[100],analysis_algorithm=['TrialAveragedFiringRate'],st_orientation=[0],ads_unique=True).get_analysis_result()[0].get_value_by_id(l4_exc_or_many)
-            ort_fr_100 = param_filter_query(data_store,sheet_name=['V1_Exc_L4'],st_contrast=[100],analysis_algorithm=['TrialAveragedFiringRate'],st_orientation=[numpy.pi/2],ads_unique=True).get_analysis_result()[0].get_value_by_id(l4_exc_or_many)
-            pref_fr_50 = 0#param_filter_query(data_store,sheet_name=['V1_Exc_L4'],st_contrast=[5],analysis_algorithm=['TrialAveragedFiringRate'],st_orientation=[0],ads_unique=True).get_analysis_result()[0].get_value_by_id(l4_exc_or_many)
-            ort_fr_50 = 0#param_filter_query(data_store,sheet_name=['V1_Exc_L4'],st_contrast=[5],analysis_algorithm=['TrialAveragedFiringRate'],st_orientation=[numpy.pi/2],ads_unique=True).get_analysis_result()[0].get_value_by_id(l4_exc_or_many)
-            spont = param_filter_query(data_store,st_name='InternalStimulus',sheet_name=['V1_Exc_L4'],analysis_algorithm=['TrialAveragedFiringRate'],ads_unique=True).get_analysis_result()[0].get_value_by_id(l4_exc_or_many)
+            pref_fr_100 = param_filter_query(data_store,sheet_name=['V1_Exc_L4'],st_contrast=[100],analysis_algorithm=['TrialAveragedFiringRate'],value_name="Firing rate",st_orientation=[0],ads_unique=True).get_analysis_result()[0].get_value_by_id(l4_exc_or_many)
+            ort_fr_100 = param_filter_query(data_store,sheet_name=['V1_Exc_L4'],st_contrast=[100],analysis_algorithm=['TrialAveragedFiringRate'],value_name="Firing rate",st_orientation=[numpy.pi/2],ads_unique=True).get_analysis_result()[0].get_value_by_id(l4_exc_or_many)
+            pref_fr_50 = 0#param_filter_query(data_store,sheet_name=['V1_Exc_L4'],st_contrast=[5],analysis_algorithm=['TrialAveragedFiringRate'],value_name="Firing rate",st_orientation=[0],ads_unique=True).get_analysis_result()[0].get_value_by_id(l4_exc_or_many)
+            ort_fr_50 = 0#param_filter_query(data_store,sheet_name=['V1_Exc_L4'],st_contrast=[5],analysis_algorithm=['TrialAveragedFiringRate'],value_name="Firing rate",st_orientation=[numpy.pi/2],ads_unique=True).get_analysis_result()[0].get_value_by_id(l4_exc_or_many)
+            spont = param_filter_query(data_store,st_name='InternalStimulus',sheet_name=['V1_Exc_L4'],analysis_algorithm=['TrialAveragedFiringRate'],value_name="Firing rate",ads_unique=True).get_analysis_result()[0].get_value_by_id(l4_exc_or_many)
 
             pylab.figure()
             pylab.bar([1,2,3,4,5],[numpy.mean(pref_fr_100),numpy.mean(ort_fr_100),numpy.mean(pref_fr_50),numpy.mean(ort_fr_50),numpy.mean(spont)])
@@ -773,11 +773,11 @@ def perform_analysis_and_visualization(data_store):
             pylab.savefig(Global.root_directory+"Orientation_responseL4.png")
             
             
-            pref_fr_100 = param_filter_query(data_store,sheet_name=['V1_Exc_L2/3'],st_contrast=[100],analysis_algorithm=['TrialAveragedFiringRate'],st_orientation=[0],ads_unique=True).get_analysis_result()[0].get_value_by_id(l23_exc_or_many)
-            ort_fr_100 = param_filter_query(data_store,sheet_name=['V1_Exc_L2/3'],st_contrast=[100],analysis_algorithm=['TrialAveragedFiringRate'],st_orientation=[numpy.pi/2],ads_unique=True).get_analysis_result()[0].get_value_by_id(l23_exc_or_many)
-            pref_fr_50 = 0#param_filter_query(data_store,sheet_name=['V1_Exc_L2/3'],st_contrast=[50],analysis_algorithm=['TrialAveragedFiringRate'],st_orientation=[0],ads_unique=True).get_analysis_result()[0].get_value_by_id(l23_exc_or_many)
-            ort_fr_50 = 0#param_filter_query(data_store,sheet_name=['V1_Exc_L2/3'],st_contrast=[50],analysis_algorithm=['TrialAveragedFiringRate'],st_orientation=[numpy.pi/2],ads_unique=True).get_analysis_result()[0].get_value_by_id(l23_exc_or_many)
-            spont = param_filter_query(data_store,st_name='InternalStimulus',sheet_name=['V1_Exc_L2/3'],analysis_algorithm=['TrialAveragedFiringRate'],ads_unique=True).get_analysis_result()[0].get_value_by_id(l23_exc_or_many)
+            pref_fr_100 = param_filter_query(data_store,sheet_name=['V1_Exc_L2/3'],st_contrast=[100],analysis_algorithm=['TrialAveragedFiringRate'],value_name="Firing rate",st_orientation=[0],ads_unique=True).get_analysis_result()[0].get_value_by_id(l23_exc_or_many)
+            ort_fr_100 = param_filter_query(data_store,sheet_name=['V1_Exc_L2/3'],st_contrast=[100],analysis_algorithm=['TrialAveragedFiringRate'],value_name="Firing rate",st_orientation=[numpy.pi/2],ads_unique=True).get_analysis_result()[0].get_value_by_id(l23_exc_or_many)
+            pref_fr_50 = 0#param_filter_query(data_store,sheet_name=['V1_Exc_L2/3'],st_contrast=[50],analysis_algorithm=['TrialAveragedFiringRate'],value_name="Firing rate",st_orientation=[0],ads_unique=True).get_analysis_result()[0].get_value_by_id(l23_exc_or_many)
+            ort_fr_50 = 0#param_filter_query(data_store,sheet_name=['V1_Exc_L2/3'],st_contrast=[50],analysis_algorithm=['TrialAveragedFiringRate'],value_name="Firing rate",st_orientation=[numpy.pi/2],ads_unique=True).get_analysis_result()[0].get_value_by_id(l23_exc_or_many)
+            spont = param_filter_query(data_store,st_name='InternalStimulus',sheet_name=['V1_Exc_L2/3'],analysis_algorithm=['TrialAveragedFiringRate'],value_name="Firing rate",ads_unique=True).get_analysis_result()[0].get_value_by_id(l23_exc_or_many)
 
             pylab.figure()
             pylab.bar([1,2,3,4,5],[numpy.mean(pref_fr_100),numpy.mean(ort_fr_100),numpy.mean(pref_fr_50),numpy.mean(ort_fr_50),numpy.mean(spont)])
@@ -816,7 +816,7 @@ def perform_analysis_and_visualization(data_store):
             
             
             # self sustained plotting
-            dsv = param_filter_query(data_store,st_name=['InternalStimulus'],st_direct_stimulation_name="None")    
+            dsv = param_filter_query(data_store,st_name=['InternalStimulus'],st_direct_stimulation_name=None)    
             OverviewPlot(dsv,ParameterSet({'sheet_name' : 'V1_Exc_L4', 'neuron' : analog_ids[0], 'sheet_activity' : {}, 'spontaneous' : True}),fig_param={'dpi' : 100,'figsize': (28,12)},plot_file_name='SSExcAnalog.png').plot()
             OverviewPlot(dsv,ParameterSet({'sheet_name' : 'V1_Inh_L4', 'neuron' : analog_ids_inh[0], 'sheet_activity' : {}, 'spontaneous' : True}),fig_param={'dpi' : 100,'figsize': (28,12)},plot_file_name='SSInhAnalog.png').plot()    
             
@@ -1042,18 +1042,18 @@ def perform_analysis_and_visualization_spont(data_store):
         spike_ids_inh23 = []
 
 
-    dsv = param_filter_query(data_store,st_direct_stimulation_name="None",st_name="InternalStimulus")   
+    dsv = param_filter_query(data_store,st_direct_stimulation_name=None,st_name="InternalStimulus")   
     TrialAveragedFiringRate(dsv,ParameterSet({})).analyse()
-    Analog_MeanSTDAndFanoFactor(param_filter_query(dsv,st_direct_stimulation_name="None"),ParameterSet({})).analyse()
-    TrialAveragedVarianceAndVarianceRatioOfConductances(param_filter_query(dsv,st_direct_stimulation_name="None"),ParameterSet({})).analyse()
-    PSTH(param_filter_query(dsv,st_direct_stimulation_name="None"),ParameterSet({'bin_length' : 10.0})).analyse()
-    Irregularity(param_filter_query(data_store,st_direct_stimulation_name="None"),ParameterSet({})).analyse()
-    CrossCorrelationOfExcitatoryAndInhibitoryConductances(param_filter_query(data_store,st_direct_stimulation_name="None"),ParameterSet({})).analyse()
+    Analog_MeanSTDAndFanoFactor(param_filter_query(dsv,st_direct_stimulation_name=None),ParameterSet({})).analyse()
+    TrialAveragedVarianceAndVarianceRatioOfConductances(param_filter_query(dsv,st_direct_stimulation_name=None),ParameterSet({})).analyse()
+    PSTH(param_filter_query(dsv,st_direct_stimulation_name=None),ParameterSet({'bin_length' : 10.0})).analyse()
+    Irregularity(param_filter_query(data_store,st_direct_stimulation_name=None),ParameterSet({})).analyse()
+    CrossCorrelationOfExcitatoryAndInhibitoryConductances(param_filter_query(data_store,st_direct_stimulation_name=None),ParameterSet({})).analyse()
     NeuronToNeuronAnalogSignalCorrelations(param_filter_query(data_store,analysis_algorithm='PSTH'),ParameterSet({'convert_nan_to_zero' : True})).analyse()
     PopulationMeanAndVar(data_store,ParameterSet({})).analyse()
     data_store.save()
     
-    dsv = param_filter_query(data_store,st_name=['InternalStimulus'],st_direct_stimulation_name="None")    
+    dsv = param_filter_query(data_store,st_name=['InternalStimulus'],st_direct_stimulation_name=None)    
     OverviewPlot(dsv,ParameterSet({'sheet_name' : 'V1_Exc_L4', 'neuron' : analog_ids[0], 'sheet_activity' : {}, 'spontaneous' : True}),fig_param={'dpi' : 100,'figsize': (28,12)},plot_file_name='SSExcAnalogL4.png').plot()
     OverviewPlot(dsv,ParameterSet({'sheet_name' : 'V1_Inh_L4', 'neuron' : analog_ids_inh[0], 'sheet_activity' : {}, 'spontaneous' : True}),fig_param={'dpi' : 100,'figsize': (28,12)},plot_file_name='SSInhAnalogL4.png').plot()    
             
@@ -1061,7 +1061,7 @@ def perform_analysis_and_visualization_spont(data_store):
     RasterPlot(dsv,ParameterSet({'sheet_name' : 'V1_Inh_L4', 'neurons' : spike_ids_inh,'trial_averaged_histogram': False, 'spontaneous' : False}),fig_param={'dpi' : 100,'figsize': (28,12)},plot_file_name='SSInhRasterL4.png').plot({'SpikeRasterPlot.group_trials':True})
 
     if l23_flag:
-        dsv = param_filter_query(data_store,st_name=['InternalStimulus'],st_direct_stimulation_name="None")    
+        dsv = param_filter_query(data_store,st_name=['InternalStimulus'],st_direct_stimulation_name=None)    
         OverviewPlot(dsv,ParameterSet({'sheet_name' : 'V1_Exc_L2/3', 'neuron' : analog_ids23[0], 'sheet_activity' : {}, 'spontaneous' : True}),fig_param={'dpi' : 100,'figsize': (28,12)},plot_file_name='SSExcAnalogL23.png').plot()
         OverviewPlot(dsv,ParameterSet({'sheet_name' : 'V1_Inh_L2/3', 'neuron' : analog_ids_inh23[0], 'sheet_activity' : {}, 'spontaneous' : True}),fig_param={'dpi' : 100,'figsize': (28,12)},plot_file_name='SSInhAnalogL23.png').plot()    
                 
@@ -1167,9 +1167,9 @@ def perform_analysis_and_visualization_or_small(data_store):
             #dsv = param_filter_query(data_store,sheet_name = 'V1_Exc_L2/3',st_contrast=100)    
             #FanoFactor_Baudot_et_al(dsv,ParameterSet({}),plot_file_name='FanoFactorL23.png').plot()
             if True:
-                pref_fr_100 = param_filter_query(data_store,sheet_name=['V1_Exc_L4'],st_contrast=[100],analysis_algorithm=['TrialAveragedFiringRate'],st_orientation=[0],ads_unique=True).get_analysis_result()[0].get_value_by_id(l4_exc_or_many)
-                ort_fr_100 = param_filter_query(data_store,sheet_name=['V1_Exc_L4'],st_contrast=[100],analysis_algorithm=['TrialAveragedFiringRate'],st_orientation=[numpy.pi/2],ads_unique=True).get_analysis_result()[0].get_value_by_id(l4_exc_or_many)
-                spont = param_filter_query(data_store,st_name='InternalStimulus',sheet_name=['V1_Exc_L4'],analysis_algorithm=['TrialAveragedFiringRate'],ads_unique=True).get_analysis_result()[0].get_value_by_id(l4_exc_or_many)
+                pref_fr_100 = param_filter_query(data_store,sheet_name=['V1_Exc_L4'],st_contrast=[100],analysis_algorithm=['TrialAveragedFiringRate'],value_name="Firing rate",st_orientation=[0],ads_unique=True).get_analysis_result()[0].get_value_by_id(l4_exc_or_many)
+                ort_fr_100 = param_filter_query(data_store,sheet_name=['V1_Exc_L4'],st_contrast=[100],analysis_algorithm=['TrialAveragedFiringRate'],value_name="Firing rate",st_orientation=[numpy.pi/2],ads_unique=True).get_analysis_result()[0].get_value_by_id(l4_exc_or_many)
+                spont = param_filter_query(data_store,st_name='InternalStimulus',sheet_name=['V1_Exc_L4'],analysis_algorithm=['TrialAveragedFiringRate'],value_name="Firing rate",ads_unique=True).get_analysis_result()[0].get_value_by_id(l4_exc_or_many)
 
                 pylab.figure()
                 pylab.bar([1,2,3,4,5],[numpy.mean(pref_fr_100),numpy.mean(ort_fr_100),0,0,numpy.mean(spont)])
@@ -1180,8 +1180,8 @@ def perform_analysis_and_visualization_or_small(data_store):
                 pylab.savefig(Global.root_directory+"Orientation_responseL4.png")
                 
                 if l23:
-                    pref_fr_100 = param_filter_query(data_store,sheet_name=['V1_Exc_L2/3'],st_contrast=[100],analysis_algorithm=['TrialAveragedFiringRate'],st_orientation=[0],ads_unique=True).get_analysis_result()[0].get_value_by_id(l23_exc_or_many)
-                    spont = param_filter_query(data_store,st_name='InternalStimulus',sheet_name=['V1_Exc_L2/3'],analysis_algorithm=['TrialAveragedFiringRate'],ads_unique=True).get_analysis_result()[0].get_value_by_id(l23_exc_or_many)
+                    pref_fr_100 = param_filter_query(data_store,sheet_name=['V1_Exc_L2/3'],st_contrast=[100],analysis_algorithm=['TrialAveragedFiringRate'],value_name="Firing rate",st_orientation=[0],ads_unique=True).get_analysis_result()[0].get_value_by_id(l23_exc_or_many)
+                    spont = param_filter_query(data_store,st_name='InternalStimulus',sheet_name=['V1_Exc_L2/3'],analysis_algorithm=['TrialAveragedFiringRate'],value_name="Firing rate",ads_unique=True).get_analysis_result()[0].get_value_by_id(l23_exc_or_many)
 
                     pylab.figure()
                     pylab.bar([1,2,3,4,5],[numpy.mean(pref_fr_100),0,0,0,numpy.mean(spont)])
