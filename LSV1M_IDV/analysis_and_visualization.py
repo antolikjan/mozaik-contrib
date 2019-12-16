@@ -8,7 +8,7 @@ from mozaik.storage.datastore import PickledDataStore
 from mozaik.controller import Global
 
 import sys
-sys.path.append('/home/antolikjan/projects/mozaik/contrib')
+sys.path.append('/home/jantolik/projects/mozaiknew/contrib')
 import Kremkow_plots
 from Kremkow_plots import *
 from lsv1m_paper import *
@@ -21,6 +21,8 @@ import os
 process = psutil.Process(os.getpid())
 
 
+low_contrast=30
+
 def memory_usage_psutil():
     # return the memory usage in MB
     return process.memory_percent()
@@ -29,7 +31,7 @@ def memory_usage_psutil():
 def analysis(data_store,analog_ids,analog_ids_inh,analog_ids23=None,analog_ids_inh23=None):
         sheets = list(set(data_store.sheets()) & set(['V1_Exc_L4','V1_Inh_L4','V1_Exc_L2/3','V1_Inh_L2/3']))
         exc_sheets = list(set(data_store.sheets()) & set(['V1_Exc_L4','V1_Exc_L2/3']))
-        l23_flag = ('V1_Exc_L2/3' in set(sheets)) and (analog_ids23 != None)
+        l23_flag = ('V1_Exc_L2/3' in set(sheets))
         
         logger.info('0: ' + str(memory_usage_psutil()))
         
@@ -181,7 +183,10 @@ def analysis(data_store,analog_ids,analog_ids_inh,analog_ids23=None,analog_ids_i
     	    logger.info('12: ' + str(memory_usage_psutil()))
 
         dsv = param_filter_query(data_store,analysis_algorithm='ActionPotentialRemoval')
-        TrialVariability(data_store,ParameterSet({'vm': True,  'cond_exc': False, 'cond_inh': False})).analyse()
+	dsv.print_content(full_ADS=True)
+        TrialVariability(dsv,ParameterSet({'vm': False,  'cond_exc': False, 'cond_inh': False})).analyse()
+	param_filter_query(data_store,analysis_algorithm='TrialVariability').print_content(full_ADS=True)
+	
         logger.info('13: ' + str(memory_usage_psutil()))
         ModulationRatio(param_filter_query(data_store,sheet_name=exc_sheets,st_contrast=[100]),ParameterSet({})).analyse()
        
@@ -364,9 +369,9 @@ def perform_analysis_and_visualization_or(data_store):
                 ort_fr_100 = param_filter_query(data_store,sheet_name=['V1_Exc_L4'],st_contrast=[100],analysis_algorithm=['TrialAveragedFiringRate'],value_name='Firing rate',st_orientation=[numpy.pi/2],ads_unique=True).get_analysis_result()[0].get_value_by_id(l4_exc_or_many)
                 pref_fr_50 = 0
                 ort_fr_50 = 0
-                if len(param_filter_query(data_store,sheet_name=['V1_Exc_L4'],st_contrast=[10],analysis_algorithm=['TrialAveragedFiringRate'],value_name='Firing rate',st_orientation=[0]).get_analysis_result()) != 0:    
-                    pref_fr_50 = param_filter_query(data_store,sheet_name=['V1_Exc_L4'],st_contrast=[10],analysis_algorithm=['TrialAveragedFiringRate'],value_name='Firing rate',st_orientation=[0],ads_unique=True).get_analysis_result()[0].get_value_by_id(l4_exc_or_many)
-                    ort_fr_50 = param_filter_query(data_store,sheet_name=['V1_Exc_L4'],st_contrast=[10],analysis_algorithm=['TrialAveragedFiringRate'],value_name='Firing rate',st_orientation=[numpy.pi/2],ads_unique=True).get_analysis_result()[0].get_value_by_id(l4_exc_or_many)
+                if len(param_filter_query(data_store,sheet_name=['V1_Exc_L4'],st_contrast=[low_contrast],analysis_algorithm=['TrialAveragedFiringRate'],value_name='Firing rate',st_orientation=[0]).get_analysis_result()) != 0:    
+                    pref_fr_50 = param_filter_query(data_store,sheet_name=['V1_Exc_L4'],st_contrast=[low_contrast],analysis_algorithm=['TrialAveragedFiringRate'],value_name='Firing rate',st_orientation=[0],ads_unique=True).get_analysis_result()[0].get_value_by_id(l4_exc_or_many)
+                    ort_fr_50 = param_filter_query(data_store,sheet_name=['V1_Exc_L4'],st_contrast=[low_contrast],analysis_algorithm=['TrialAveragedFiringRate'],value_name='Firing rate',st_orientation=[numpy.pi/2],ads_unique=True).get_analysis_result()[0].get_value_by_id(l4_exc_or_many)
                 spont = param_filter_query(data_store,st_name='InternalStimulus',sheet_name=['V1_Exc_L4'],analysis_algorithm=['TrialAveragedFiringRate'],value_name='Firing rate',ads_unique=True).get_analysis_result()[0].get_value_by_id(l4_exc_or_many)
 
                 pylab.figure()
@@ -381,9 +386,9 @@ def perform_analysis_and_visualization_or(data_store):
                 ort_fr_100 = param_filter_query(data_store,sheet_name=['V1_Inh_L4'],st_contrast=[100],analysis_algorithm=['TrialAveragedFiringRate'],value_name='Firing rate',st_orientation=[numpy.pi/2],ads_unique=True).get_analysis_result()[0].get_value_by_id(l4_inh_or_many)
                 pref_fr_50 = 0
                 ort_fr_50 = 0
-                if len(param_filter_query(data_store,sheet_name=['V1_Inh_L4'],st_contrast=[10],analysis_algorithm=['TrialAveragedFiringRate'],value_name='Firing rate',st_orientation=[0]).get_analysis_result()) != 0:    
-                    pref_fr_50 = param_filter_query(data_store,sheet_name=['V1_Inh_L4'],st_contrast=[10],analysis_algorithm=['TrialAveragedFiringRate'],value_name='Firing rate',st_orientation=[0],ads_unique=True).get_analysis_result()[0].get_value_by_id(l4_inh_or_many)
-                    ort_fr_50 = param_filter_query(data_store,sheet_name=['V1_Inh_L4'],st_contrast=[10],analysis_algorithm=['TrialAveragedFiringRate'],value_name='Firing rate',st_orientation=[numpy.pi/2],ads_unique=True).get_analysis_result()[0].get_value_by_id(l4_inh_or_many)
+                if len(param_filter_query(data_store,sheet_name=['V1_Inh_L4'],st_contrast=[low_contrast],analysis_algorithm=['TrialAveragedFiringRate'],value_name='Firing rate',st_orientation=[0]).get_analysis_result()) != 0:    
+                    pref_fr_50 = param_filter_query(data_store,sheet_name=['V1_Inh_L4'],st_contrast=[low_contrast],analysis_algorithm=['TrialAveragedFiringRate'],value_name='Firing rate',st_orientation=[0],ads_unique=True).get_analysis_result()[0].get_value_by_id(l4_inh_or_many)
+                    ort_fr_50 = param_filter_query(data_store,sheet_name=['V1_Inh_L4'],st_contrast=[low_contrast],analysis_algorithm=['TrialAveragedFiringRate'],value_name='Firing rate',st_orientation=[numpy.pi/2],ads_unique=True).get_analysis_result()[0].get_value_by_id(l4_inh_or_many)
                 spont = param_filter_query(data_store,st_name='InternalStimulus',sheet_name=['V1_Inh_L4'],analysis_algorithm=['TrialAveragedFiringRate'],value_name='Firing rate',ads_unique=True).get_analysis_result()[0].get_value_by_id(l4_inh_or_many)
 
                 pylab.figure()
@@ -401,9 +406,9 @@ def perform_analysis_and_visualization_or(data_store):
                     pref_fr_50 = 0
                     ort_fr_50 = 0
                     
-                    if(len(param_filter_query(data_store,sheet_name=['V1_Exc_L2/3'],st_contrast=[10],analysis_algorithm=['TrialAveragedFiringRate'],value_name='Firing rate',st_orientation=[0]).get_analysis_result())!=0):
-                        pref_fr_50 = param_filter_query(data_store,sheet_name=['V1_Exc_L2/3'],st_contrast=[10],analysis_algorithm=['TrialAveragedFiringRate'],value_name='Firing rate',st_orientation=[0],ads_unique=True).get_analysis_result()[0].get_value_by_id(l23_exc_or_many)
-                        ort_fr_50 = param_filter_query(data_store,sheet_name=['V1_Exc_L2/3'],st_contrast=[10],analysis_algorithm=['TrialAveragedFiringRate'],value_name='Firing rate',st_orientation=[numpy.pi/2],ads_unique=True).get_analysis_result()[0].get_value_by_id(l23_exc_or_many)
+                    if(len(param_filter_query(data_store,sheet_name=['V1_Exc_L2/3'],st_contrast=[low_contrast],analysis_algorithm=['TrialAveragedFiringRate'],value_name='Firing rate',st_orientation=[0]).get_analysis_result())!=0):
+                        pref_fr_50 = param_filter_query(data_store,sheet_name=['V1_Exc_L2/3'],st_contrast=[low_contrast],analysis_algorithm=['TrialAveragedFiringRate'],value_name='Firing rate',st_orientation=[0],ads_unique=True).get_analysis_result()[0].get_value_by_id(l23_exc_or_many)
+                        ort_fr_50 = param_filter_query(data_store,sheet_name=['V1_Exc_L2/3'],st_contrast=[low_contrast],analysis_algorithm=['TrialAveragedFiringRate'],value_name='Firing rate',st_orientation=[numpy.pi/2],ads_unique=True).get_analysis_result()[0].get_value_by_id(l23_exc_or_many)
                     spont = param_filter_query(data_store,st_name='InternalStimulus',sheet_name=['V1_Exc_L2/3'],analysis_algorithm=['TrialAveragedFiringRate'],value_name='Firing rate',ads_unique=True).get_analysis_result()[0].get_value_by_id(l23_exc_or_many)
 
                     pylab.figure()
@@ -420,9 +425,9 @@ def perform_analysis_and_visualization_or(data_store):
                     pref_fr_50 = 0
                     ort_fr_50 = 0
                     
-                    if(len(param_filter_query(data_store,sheet_name=['V1_Inh_L2/3'],st_contrast=[10],analysis_algorithm=['TrialAveragedFiringRate'],value_name='Firing rate',st_orientation=[0]).get_analysis_result())!=0):
-                        pref_fr_50 = param_filter_query(data_store,sheet_name=['V1_Inh_L2/3'],st_contrast=[10],analysis_algorithm=['TrialAveragedFiringRate'],value_name='Firing rate',st_orientation=[0],ads_unique=True).get_analysis_result()[0].get_value_by_id(l23_inh_or_many)
-                        ort_fr_50 = param_filter_query(data_store,sheet_name=['V1_Inh_L2/3'],st_contrast=[10],analysis_algorithm=['TrialAveragedFiringRate'],value_name='Firing rate',st_orientation=[numpy.pi/2],ads_unique=True).get_analysis_result()[0].get_value_by_id(l23_inh_or_many)
+                    if(len(param_filter_query(data_store,sheet_name=['V1_Inh_L2/3'],st_contrast=[low_contrast],analysis_algorithm=['TrialAveragedFiringRate'],value_name='Firing rate',st_orientation=[0]).get_analysis_result())!=0):
+                        pref_fr_50 = param_filter_query(data_store,sheet_name=['V1_Inh_L2/3'],st_contrast=[low_contrast],analysis_algorithm=['TrialAveragedFiringRate'],value_name='Firing rate',st_orientation=[0],ads_unique=True).get_analysis_result()[0].get_value_by_id(l23_inh_or_many)
+                        ort_fr_50 = param_filter_query(data_store,sheet_name=['V1_Inh_L2/3'],st_contrast=[low_contrast],analysis_algorithm=['TrialAveragedFiringRate'],value_name='Firing rate',st_orientation=[numpy.pi/2],ads_unique=True).get_analysis_result()[0].get_value_by_id(l23_inh_or_many)
                     spont = param_filter_query(data_store,st_name='InternalStimulus',sheet_name=['V1_Inh_L2/3'],analysis_algorithm=['TrialAveragedFiringRate'],value_name='Firing rate',ads_unique=True).get_analysis_result()[0].get_value_by_id(l23_inh_or_many)
 
                     pylab.figure()
@@ -873,34 +878,9 @@ def perform_analysis_and_visualization(data_store):
             #dsv = param_filter_query(data_store,st_name='FullfieldDriftingSinusoidalGrating',st_orientation=numpy.pi/2,st_contrast=100)   
             #KremkowOverviewFigure(dsv,ParameterSet({'neuron' : l4_exc,'sheet_name' : 'V1_Exc_L4'}),fig_param={'dpi' : 100,'figsize': (19,12)},plot_file_name='ExcOverview.png').plot()
 
-            if l23_flag:
-                        TrialToTrialVariabilityComparison(data_store,ParameterSet({'sheet_name1' : 'V1_Exc_L4','sheet_name2' : 'V1_Exc_L2/3','data_dg' : 0.93 , 'data_ni' : 1.19}),fig_param={'dpi' : 200,'figsize': (15,7.5)},plot_file_name='TrialToTrialVariabilityComparison.png').plot()
-            else:
-                        TrialToTrialVariabilityComparison(data_store,ParameterSet({'sheet_name1' : 'V1_Exc_L4','sheet_name2' : 'V1_Exc_L4','data_dg' : 0.93 , 'data_ni' : 1.19}),fig_param={'dpi' : 200,'figsize': (15,7.5)},plot_file_name='TrialToTrialVariabilityComparison.png').plot()
+            TrialToTrialVariabilityComparison(data_store,ParameterSet({'sheet_name1' : 'V1_Exc_L4','sheet_name2' : 'V1_Exc_L2/3','data_dg' : 0.93 , 'data_ni' : 1.19}),fig_param={'dpi' : 200,'figsize': (15,7.5)},plot_file_name='TrialToTrialVariabilityComparison.png').plot()
+	    TrialToTrialVariabilityComparisonNew(data_store,ParameterSet({'sheet_name1' : 'V1_Exc_L4','sheet_name2' : 'V1_Exc_L2/3','data_dg' : 0.93 , 'data_ni' : 1.19}),fig_param={'dpi' : 200,'figsize': (15,7.5)},plot_file_name='TrialToTrialVariabilityComparisonNew.png').plot()
             
-            if False:            
-                dsv = param_filter_query(data_store,st_name='NaturalImageWithEyeMovement')            
-                KremkowOverviewFigure(dsv,ParameterSet({'neuron' : l4_exc,'sheet_name' : 'V1_Exc_L4'}),fig_param={'dpi' : 100,'figsize': (25,12)},plot_file_name='NMOverview.png').plot()
-
-                SNRAnalysis(data_store,ParameterSet({"neuron" : analog_ids[0]}),fig_param={'dpi' : 100,'figsize': (25,12)},plot_file_name='SNR1.png').plot()                        
-                SNRAnalysis(data_store,ParameterSet({"neuron" : analog_ids[1]}),fig_param={'dpi' : 100,'figsize': (25,12)},plot_file_name='SNR2.png').plot()                        
-                SNRAnalysis(data_store,ParameterSet({"neuron" : analog_ids[2]}),fig_param={'dpi' : 100,'figsize': (25,12)},plot_file_name='SNR3.png').plot()                        
-
-                StimulusResponseComparison(data_store,ParameterSet({'neuron' : analog_ids[0],'sheet_name' : 'V1_Exc_L4'}),fig_param={'dpi' : 100,'figsize': (18,12)},plot_file_name='StimulusResponseComparison1.png').plot()
-                StimulusResponseComparison(data_store,ParameterSet({'neuron' : analog_ids[1],'sheet_name' : 'V1_Exc_L4'}),fig_param={'dpi' : 100,'figsize': (18,12)},plot_file_name='StimulusResponseComparison2.png').plot()
-                StimulusResponseComparison(data_store,ParameterSet({'neuron' : analog_ids[2],'sheet_name' : 'V1_Exc_L4'}),fig_param={'dpi' : 100,'figsize': (18,12)},plot_file_name='StimulusResponseComparison3.png').plot()
-                StimulusResponseComparison(data_store,ParameterSet({'neuron' : analog_ids[3],'sheet_name' : 'V1_Exc_L4'}),fig_param={'dpi' : 100,'figsize': (18,12)},plot_file_name='StimulusResponseComparison4.png').plot()
-                if l23_flag:
-                    StimulusResponseComparison(data_store,ParameterSet({'neuron' : analog_ids23[0],'sheet_name' : 'V1_Exc_L2/3'}),fig_param={'dpi' : 100,'figsize': (18,12)},plot_file_name='StimulusResponseComparison1L23.png').plot()
-                    StimulusResponseComparison(data_store,ParameterSet({'neuron' : analog_ids23[1],'sheet_name' : 'V1_Exc_L2/3'}),fig_param={'dpi' : 100,'figsize': (18,12)},plot_file_name='StimulusResponseComparison2L23.png').plot()
-                    StimulusResponseComparison(data_store,ParameterSet({'neuron' : analog_ids23[2],'sheet_name' : 'V1_Exc_L2/3'}),fig_param={'dpi' : 100,'figsize': (18,12)},plot_file_name='StimulusResponseComparison3L23.png').plot()
-                    StimulusResponseComparison(data_store,ParameterSet({'neuron' : analog_ids23[3],'sheet_name' : 'V1_Exc_L2/3'}),fig_param={'dpi' : 100,'figsize': (18,12)},plot_file_name='StimulusResponseComparison4L23.png').plot()
-
-                #dsv = param_filter_query(data_store,sheet_name = 'V1_Exc_L4')    
-                #FanoFactor_Baudot_et_al(dsv,ParameterSet({}),plot_file_name='FanoFactorL4.png').plot()
-                
-                #dsv = param_filter_query(data_store,sheet_name = 'V1_Exc_L2/3')    
-                #FanoFactor_Baudot_et_al(dsv,ParameterSet({}),plot_file_name='FanoFactorL23.png').plot()
                
             dsv = param_filter_query(data_store,st_name='FullfieldDriftingSinusoidalGrating')    
             RasterPlot(dsv,ParameterSet({'sheet_name' : 'V1_Exc_L4', 'neurons' : spike_ids,'trial_averaged_histogram': False, 'spontaneous' : False}),fig_param={'dpi' : 100,'figsize': (28,12)},plot_file_name='EvokedExcRaster.png').plot({'SpikeRasterPlot.group_trials':True})
@@ -952,7 +932,6 @@ def perform_analysis_and_visualization(data_store):
                 SpontActOverview(data_store,ParameterSet({'l4_exc_neuron' : analog_ids[0], 'l4_inh_neuron' : analog_ids_inh[0],'l23_exc_neuron' : analog_ids23[0],'l23_inh_neuron' : analog_ids_inh23[0]}),plot_file_name='SpontActOverview.png', fig_param={'dpi' : 200,'figsize': (18,14.5)}).plot()
                 OrientationTuningSummaryAnalogSignals(data_store,ParameterSet({'exc_sheet_name1': 'V1_Exc_L4','inh_sheet_name1': 'V1_Inh_L4','exc_sheet_name2': 'V1_Exc_L2/3','inh_sheet_name2': 'V1_Inh_L2/3'}),fig_param={'dpi' : 200,'figsize': (18,12)},plot_file_name='OrientationTuningSummaryAnalogSignals.png').plot({'*.fontsize' : 19,'*.y_lim' : (0,None)})            
                 OrientationTuningSummaryFiringRates(data_store,ParameterSet({'exc_sheet_name1': 'V1_Exc_L4','inh_sheet_name1': 'V1_Inh_L4','exc_sheet_name2': 'V1_Exc_L2/3','inh_sheet_name2': 'V1_Inh_L2/3'}),fig_param={'dpi' : 200,'figsize': (18,12)},plot_file_name='OrientationTuningSummary.png').plot({'*.fontsize' : 19})            
-		OrientationTuningSummaryFiringRatesNew(data_store,ParameterSet({'exc_sheet_name1': 'V1_Exc_L4','inh_sheet_name1': 'V1_Inh_L4','exc_sheet_name2': 'V1_Exc_L2/3','inh_sheet_name2': 'V1_Inh_L2/3'}),fig_param={'dpi' : 200,'figsize': (18,12)},plot_file_name='OrientationTuningSummaryNew.png').plot({'*.fontsize' : 19})            
             else:
                 SpontActOverview(data_store,ParameterSet({'l4_exc_neuron' : analog_ids[0], 'l4_inh_neuron' : analog_ids_inh[0],'l23_exc_neuron' : -1,'l23_inh_neuron' : -1}),plot_file_name='SpontActOverview.png', fig_param={'dpi' : 200,'figsize': (18,14.5)}).plot()
                 Kremkow_plots.OrientationTuningSummary(data_store,ParameterSet({'exc_sheet_name': 'V1_Exc_L4','inh_sheet_name': 'V1_Inh_L4'}),fig_param={'dpi' : 100,'figsize': (15,9)},plot_file_name='OrientationTuningSummaryL4.png').plot()            

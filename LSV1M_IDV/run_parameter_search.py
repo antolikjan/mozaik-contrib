@@ -6,32 +6,11 @@ import time
 
 if True:
     CombinationParameterSearch(SlurmSequentialBackendIoV(num_threads=1,num_mpi=12),{
-
-									     'sheets.l4_cortex_exc.L4ExcL4InhConnection.base_weight' : [0.0009],
-									     'sheets.l4_cortex_inh.L4InhL4ExcConnection.base_weight' : [0.0021],
-#									     'sheets.l4_cortex_exc.inhibitory_connection_ratio' : [0.7],
 									     'sheets.l4_cortex_exc.K' : [1000],
-									     'sheets.l4_cortex_exc.params.density' : [1500],
-									     'sheets.l4_cortex_inh.ExcInhAfferentRatio' : [1.0],
-									     'sheets.retina_lgn.params.noise.stdev' : [2.2],
-#									     'sheets.l4_cortex_exc.AfferentConnection.short_term_plasticity.tau_rec' : [500],
-									     'sheets.l4_cortex_exc.params.sx' : [4000],
-									     'sheets.l4_cortex_exc.params.cell.params.v_thresh' : [-53],
-#									     'sheets.l4_cortex_exc.layer23_aff_ratio' : [0.2],
-									     'sheets.l4_cortex_exc.params.cell.params.tau_syn_E' : [7.0],
-									     'sheets.l4_cortex_exc.params.cell.params.tau_m' : [17.0],
-#									     'sheets.l4_cortex_inh.params.cell.params.tau_m' : [10.0],
-									     'sheets.l4_cortex_exc.AfferentConnection.size' : [0.17],
-#									     'sheets.l4_cortex_exc.params.cell.params.a' : [-0.8],
-									     'sheets.l4_cortex_exc.params.cell.params.tau_syn_I' : [11.0],
-#									     'sheets.l4_cortex_exc.AfferentConnection.base_weight' : [0.0016],
-									     'sheets.l4_cortex_exc.L4ExcL4ExcConnection.base_weight' : [0.0005],
-									     'sheets.l4_cortex_exc.L4ExcL4ExcConnection.short_term_plasticity.tau_rec' : [30],
-#									     'sheets.l23_cortex_exc.L23ExcL4ExcConnection.weight_functions.f1.params.arborization_constant' : [100],
-#									     'sheets.l23_cortex_exc.L23ExcL4InhConnection.weight_functions.f2.params.sigma' : [3.0],
-									     'sheets.l23_cortex_exc.L23ExcL23InhConnection.weight_functions.f1.params.sigma' : [1.4],
-#									     'sheets.l4_cortex_exc.L4ExcL4InhConnection.weight_functions.f1.params.sigma' : [1.4],
-#									     'sheets.l4_cortex_exc.L4ExcL4ExcConnection.weight_functions.f1.params.sigma' : [1.4],
+									     'sheets.l4_cortex_exc.params.density' : [1500,2000],
+									     'sheets.retina_lgn.params.gain_control.gain' : [10,15],
+									     'sheets.retina_lgn.params.noise.stdev' : [2.4],
+									     'sheets.l4_cortex_exc.L4ExcL4InhConnection.base_weight' : [0.00085,0.0008],
 									     }).run_parameter_search()
 
 
