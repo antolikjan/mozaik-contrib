@@ -523,47 +523,47 @@ def perform_analysis_and_visualization_stc(data_store):
         analog_center23 = set(center23).intersection(analog_ids23)
         logger.info(str(analog_center23))    
     
+    if False:
+        TrialAveragedFiringRate(param_filter_query(data_store,sheet_name=['V1_Exc_L4','V1_Exc_L2/3'],st_name='DriftingSinusoidalGratingDisk'),ParameterSet({})).analyse()
     
-    TrialAveragedFiringRate(param_filter_query(data_store,sheet_name=['V1_Exc_L4','V1_Exc_L2/3'],st_name='DriftingSinusoidalGratingDisk'),ParameterSet({})).analyse()
-    
-    dsv = param_filter_query(data_store,sheet_name=['V1_Exc_L4','V1_Exc_L2/3'],st_name='DriftingSinusoidalGratingDisk')
-    Analog_F0andF1(dsv,ParameterSet({})).analyse()
+	dsv = param_filter_query(data_store,sheet_name=['V1_Exc_L4','V1_Exc_L2/3'],st_name='DriftingSinusoidalGratingDisk')
+	Analog_F0andF1(dsv,ParameterSet({})).analyse()
 
-    dsv = param_filter_query(data_store,st_name='InternalStimulus',st_direct_stimulation_name=None)
-    Analog_MeanSTDAndFanoFactor(dsv,ParameterSet({})).analyse()
+	dsv = param_filter_query(data_store,st_name='InternalStimulus',st_direct_stimulation_name=None)
+	Analog_MeanSTDAndFanoFactor(dsv,ParameterSet({})).analyse()
 
-    pnv = param_filter_query(data_store,st_name='InternalStimulus',sheet_name='V1_Exc_L4',analysis_algorithm=['Analog_MeanSTDAndFanoFactor'],value_name='Mean(VM)',st_direct_stimulation_name=None).get_analysis_result()[0]
-    dsv = param_filter_query(data_store,st_name='DriftingSinusoidalGratingDisk',sheet_name='V1_Exc_L4',analysis_algorithm=['Analog_F0andF1'],value_name='F0_Vm')
-    OperationPNVfromPNVS(pnv,lambda x,y: -(x+y),'-(x+y)',dsv,ParameterSet({})).analyse()
+	pnv = param_filter_query(data_store,st_name='InternalStimulus',sheet_name='V1_Exc_L4',analysis_algorithm=['Analog_MeanSTDAndFanoFactor'],value_name='Mean(VM)',st_direct_stimulation_name=None).get_analysis_result()[0]
+	dsv = param_filter_query(data_store,st_name='DriftingSinusoidalGratingDisk',sheet_name='V1_Exc_L4',analysis_algorithm=['Analog_F0andF1'],value_name='F0_Vm')
+	OperationPNVfromPNVS(pnv,lambda x,y: -(x+y),'-(x+y)',dsv,ParameterSet({})).analyse()
 
-    pnv = param_filter_query(data_store,st_name='InternalStimulus',sheet_name='V1_Exc_L4',analysis_algorithm=['Analog_MeanSTDAndFanoFactor'],value_name='Mean(ECond)',st_direct_stimulation_name=None).get_analysis_result()[0]
-    dsv = param_filter_query(data_store,st_name='DriftingSinusoidalGratingDisk',sheet_name='V1_Exc_L4',analysis_algorithm=['Analog_F0andF1'],value_name='F0_Exc_Cond')
-    OperationPNVfromPNVS(pnv,lambda x,y: x-y,'x-y',dsv,ParameterSet({})).analyse()
+	pnv = param_filter_query(data_store,st_name='InternalStimulus',sheet_name='V1_Exc_L4',analysis_algorithm=['Analog_MeanSTDAndFanoFactor'],value_name='Mean(ECond)',st_direct_stimulation_name=None).get_analysis_result()[0]
+	dsv = param_filter_query(data_store,st_name='DriftingSinusoidalGratingDisk',sheet_name='V1_Exc_L4',analysis_algorithm=['Analog_F0andF1'],value_name='F0_Exc_Cond')
+	OperationPNVfromPNVS(pnv,lambda x,y: x-y,'x-y',dsv,ParameterSet({})).analyse()
 
-    pnv = param_filter_query(data_store,st_name='InternalStimulus',sheet_name='V1_Exc_L4',analysis_algorithm=['Analog_MeanSTDAndFanoFactor'],value_name='Mean(ICond)',st_direct_stimulation_name=None).get_analysis_result()[0]
-    dsv = param_filter_query(data_store,st_name='DriftingSinusoidalGratingDisk',sheet_name='V1_Exc_L4',analysis_algorithm=['Analog_F0andF1'],value_name='F0_Inh_Cond')
-    OperationPNVfromPNVS(pnv,lambda x,y: x-y,'x-y',dsv,ParameterSet({})).analyse()
+	pnv = param_filter_query(data_store,st_name='InternalStimulus',sheet_name='V1_Exc_L4',analysis_algorithm=['Analog_MeanSTDAndFanoFactor'],value_name='Mean(ICond)',st_direct_stimulation_name=None).get_analysis_result()[0]
+	dsv = param_filter_query(data_store,st_name='DriftingSinusoidalGratingDisk',sheet_name='V1_Exc_L4',analysis_algorithm=['Analog_F0andF1'],value_name='F0_Inh_Cond')
+	OperationPNVfromPNVS(pnv,lambda x,y: x-y,'x-y',dsv,ParameterSet({})).analyse()
 
 
-    if l23:
-        pnv = param_filter_query(data_store,st_name='InternalStimulus',sheet_name='V1_Exc_L2/3',analysis_algorithm=['Analog_MeanSTDAndFanoFactor'],value_name='Mean(VM)',st_direct_stimulation_name=None).get_analysis_result()[0]
-        dsv = param_filter_query(data_store,st_name='DriftingSinusoidalGratingDisk',sheet_name='V1_Exc_L2/3',analysis_algorithm=['Analog_F0andF1'],value_name='F0_Vm')
-        OperationPNVfromPNVS(pnv,lambda x,y: -(x+y),'-(x+y)',dsv,ParameterSet({})).analyse()
+	if l23:
+    	    pnv = param_filter_query(data_store,st_name='InternalStimulus',sheet_name='V1_Exc_L2/3',analysis_algorithm=['Analog_MeanSTDAndFanoFactor'],value_name='Mean(VM)',st_direct_stimulation_name=None).get_analysis_result()[0]
+    	    dsv = param_filter_query(data_store,st_name='DriftingSinusoidalGratingDisk',sheet_name='V1_Exc_L2/3',analysis_algorithm=['Analog_F0andF1'],value_name='F0_Vm')
+    	    OperationPNVfromPNVS(pnv,lambda x,y: -(x+y),'-(x+y)',dsv,ParameterSet({})).analyse()
 	
-	pnv = param_filter_query(data_store,st_name='InternalStimulus',sheet_name='V1_Exc_L2/3',analysis_algorithm=['Analog_MeanSTDAndFanoFactor'],value_name='Mean(ECond)',st_direct_stimulation_name=None).get_analysis_result()[0]
-        dsv = param_filter_query(data_store,st_name='DriftingSinusoidalGratingDisk',sheet_name='V1_Exc_L2/3',analysis_algorithm=['Analog_F0andF1'],value_name='F0_Exc_Cond')
-        OperationPNVfromPNVS(pnv,lambda x,y: x-y,'x-y',dsv,ParameterSet({})).analyse()
+	    pnv = param_filter_query(data_store,st_name='InternalStimulus',sheet_name='V1_Exc_L2/3',analysis_algorithm=['Analog_MeanSTDAndFanoFactor'],value_name='Mean(ECond)',st_direct_stimulation_name=None).get_analysis_result()[0]
+    	    dsv = param_filter_query(data_store,st_name='DriftingSinusoidalGratingDisk',sheet_name='V1_Exc_L2/3',analysis_algorithm=['Analog_F0andF1'],value_name='F0_Exc_Cond')
+    	    OperationPNVfromPNVS(pnv,lambda x,y: x-y,'x-y',dsv,ParameterSet({})).analyse()
 
-        pnv = param_filter_query(data_store,st_name='InternalStimulus',sheet_name='V1_Exc_L2/3',analysis_algorithm=['Analog_MeanSTDAndFanoFactor'],value_name='Mean(ICond)',st_direct_stimulation_name=None).get_analysis_result()[0]
-        dsv = param_filter_query(data_store,st_name='DriftingSinusoidalGratingDisk',sheet_name='V1_Exc_L2/3',analysis_algorithm=['Analog_F0andF1'],value_name='F0_Inh_Cond')    
-        OperationPNVfromPNVS(pnv,lambda x,y: x-y,'x-y',dsv,ParameterSet({})).analyse()
+    	    pnv = param_filter_query(data_store,st_name='InternalStimulus',sheet_name='V1_Exc_L2/3',analysis_algorithm=['Analog_MeanSTDAndFanoFactor'],value_name='Mean(ICond)',st_direct_stimulation_name=None).get_analysis_result()[0]
+    	    dsv = param_filter_query(data_store,st_name='DriftingSinusoidalGratingDisk',sheet_name='V1_Exc_L2/3',analysis_algorithm=['Analog_F0andF1'],value_name='F0_Inh_Cond')    
+    	    OperationPNVfromPNVS(pnv,lambda x,y: x-y,'x-y',dsv,ParameterSet({})).analyse()
     
-    dsv = param_filter_query(data_store,st_name='DriftingSinusoidalGratingDisk',analysis_algorithm='TrialAveragedFiringRate',value_name='Firing rate')    
+	dsv = param_filter_query(data_store,st_name='DriftingSinusoidalGratingDisk',analysis_algorithm='TrialAveragedFiringRate',value_name='Firing rate')    
 
-    SizeTuningAnalysis(dsv,ParameterSet({'neurons' : center4.tolist(), 'sheet_name' : 'V1_Exc_L4'})).analyse()
-    if l23:
-        SizeTuningAnalysis(dsv,ParameterSet({'neurons' : center23.tolist(), 'sheet_name' : 'V1_Exc_L2/3'})).analyse()        
-    data_store.save()
+	SizeTuningAnalysis(dsv,ParameterSet({'neurons' : center4.tolist(), 'sheet_name' : 'V1_Exc_L4'})).analyse()
+	if l23:
+		SizeTuningAnalysis(dsv,ParameterSet({'neurons' : center23.tolist(), 'sheet_name' : 'V1_Exc_L2/3'})).analyse()        
+	data_store.save()
 
     dsv = param_filter_query(data_store,st_name='DriftingSinusoidalGratingDisk',analysis_algorithm=['TrialAveragedFiringRate'],value_name="Firing rate")    
     PlotTuningCurve(dsv,ParameterSet({'parameter_name' : 'radius', 'neurons': list(center4), 'sheet_name' : 'V1_Exc_L4','centered'  : False,'mean' : False, 'polar' : False, 'pool'  : False}),plot_file_name='SizeTuningExcL4.png',fig_param={'dpi' : 100,'figsize': (32,7)}).plot()

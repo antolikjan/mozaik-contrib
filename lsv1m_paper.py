@@ -58,14 +58,6 @@ class MRfig(Plotting):
           if self.parameters.ComplexSheetName != 'None':
               l23_exc_or = self.datastore.full_datastore.get_analysis_result(identifier='PerNeuronValue',value_name = 'LGNAfferentOrientation', sheet_name = 'V1_Exc_L2/3')[0]
               c_ids = numpy.array(c_ids)[numpy.nonzero(numpy.array([circular_dist(l23_exc_or.get_value_by_id(i),0,numpy.pi)  for i in c_ids]) < 0.4)[0]]
-              
-            
-
-          #logger.info(str(dsv_simple_v_F0[0].get_value_by_id(s_ids)))
-          #logger.info(str(dsv_simple_v_F1[0].get_value_by_id(s_ids)))
-          #logger.info(str(dsv_complex_v_F0[0].get_value_by_id(c_ids)))
-          #logger.info(str(dsv_complex_v_F1[0].get_value_by_id(c_ids)))
-
 
           simple_v_mr = numpy.array(dsv_simple_v_F1[0].get_value_by_id(s_ids))/abs(numpy.array(dsv_simple_v_F0[0].get_value_by_id(s_ids)))
           dsv_simple = dsv_simple[0]
@@ -75,7 +67,7 @@ class MRfig(Plotting):
 
           gs = gridspec.GridSpecFromSubplotSpec(3, 7,subplot_spec=gs,wspace=0.3)
           ax = pylab.subplot(gs[0,0])
-          ax.hist(dsv_simple.values,bins=numpy.arange(0,2.2,0.2),color='w',rwidth=0.8,edgecolor='black')
+          ax.hist(dsv_simple.values,bins=numpy.arange(0,2.2,0.2),color='w',rwidth=0.8,ec='black')
           disable_top_right_axis(ax)
           disable_left_axis(ax)
           pylab.ylim(0,450)
@@ -85,7 +77,7 @@ class MRfig(Plotting):
           pylab.ylabel('Layer 4',fontsize=19)
           ax = pylab.subplot(gs[1,0])
           if self.parameters.ComplexSheetName != 'None':
-              ax.hist(dsv_complex.values,bins=numpy.arange(0,2.2,0.2),color='k',rwidth=0.8,edgecolor='black')
+              ax.hist(dsv_complex.values,bins=numpy.arange(0,2.2,0.2),color='k',rwidth=0.8,ec='black')
               disable_top_right_axis(ax)
               disable_left_axis(ax)
               pylab.ylim(0,450)
@@ -94,7 +86,7 @@ class MRfig(Plotting):
               remove_y_tick_labels()
               pylab.ylabel('Layer 2/3',fontsize=19)
               ax = pylab.subplot(gs[2,0])
-              ax.hist([dsv_complex.values,dsv_simple.values],bins=numpy.arange(0,2.2,0.2),histtype='barstacked',color=['k','w'],rwidth=0.8,edgecolor='black')
+              ax.hist([dsv_complex.values,dsv_simple.values],bins=numpy.arange(0,2.2,0.2),histtype='barstacked',color=['k','w'],rwidth=0.8,ec='black')
               disable_top_right_axis(ax) 
               disable_left_axis(ax)  
               pylab.ylim(0,450)
@@ -109,7 +101,7 @@ class MRfig(Plotting):
               
 
           ax = pylab.subplot(gs[0,1])
-          ax.hist(simple_v_mr,bins=numpy.arange(0,6,0.6),color='w',rwidth=0.8,edgecolor='black')
+          ax.hist(simple_v_mr,bins=numpy.arange(0,6,0.6),color='w',rwidth=0.8,ec='black')
           disable_top_right_axis(ax)    
           disable_left_axis(ax)      
           disable_xticks(ax)
@@ -118,14 +110,14 @@ class MRfig(Plotting):
           pylab.title(numpy.mean(simple_v_mr))
           if self.parameters.ComplexSheetName != 'None':
               ax = pylab.subplot(gs[1,1])
-              ax.hist(complex_v_mr,bins=numpy.arange(0,6,0.6),color='k',rwidth=0.8,edgecolor='black')
+              ax.hist(complex_v_mr,bins=numpy.arange(0,6,0.6),color='k',rwidth=0.8,ec='black')
               disable_top_right_axis(ax)
               disable_left_axis(ax)
               disable_xticks(ax)
               remove_x_tick_labels()
               remove_y_tick_labels()
               ax = pylab.subplot(gs[2,1])
-              ax.hist([complex_v_mr,simple_v_mr],bins=numpy.arange(0,6,0.6),histtype='barstacked',color=['k','w'],rwidth=0.8,edgecolor='black')
+              ax.hist([complex_v_mr,simple_v_mr],bins=numpy.arange(0,6,0.6),histtype='barstacked',color=['k','w'],rwidth=0.8,ec='black')
               three_tick_axis(ax.xaxis)
               remove_y_tick_labels()
               pylab.xlabel('F1/F0 Vm',fontsize=19)
@@ -135,29 +127,25 @@ class MRfig(Plotting):
               disable_left_axis(ax)                    
 
           ax = pylab.subplot(gs[0,2])
-          ax.hist(numpy.abs(dsv_simple_v_F0[0].get_value_by_id(s_ids)),bins=numpy.arange(0,5,0.5),color='w',rwidth=0.8,edgecolor='black')
+          ax.hist(numpy.abs(dsv_simple_v_F0[0].get_value_by_id(s_ids)),bins=numpy.arange(0,5,0.5),color='w',rwidth=0.8,ec='black')
           disable_top_right_axis(ax)
           disable_left_axis(ax)                
           disable_left_axis(ax)      
           disable_xticks(ax)
           remove_x_tick_labels()
           remove_y_tick_labels()
-          print dsv_simple_v_F0[0].get_value_by_id(s_ids)
-          print dsv_simple_v_F1[0].get_value_by_id(s_ids)
-          print simple_v_mr
-          print s_ids
 
           pylab.title(numpy.mean(dsv_simple_v_F0[0].get_value_by_id(s_ids)))
           if self.parameters.ComplexSheetName != 'None':
               ax = pylab.subplot(gs[1,2])
-              ax.hist(numpy.abs(dsv_complex_v_F0[0].get_value_by_id(c_ids)),bins=numpy.arange(0,5,0.5),color='k',rwidth=0.8,edgecolor='black')
+              ax.hist(numpy.abs(dsv_complex_v_F0[0].get_value_by_id(c_ids)),bins=numpy.arange(0,5,0.5),color='k',rwidth=0.8,ec='black')
               disable_top_right_axis(ax) 
               disable_left_axis(ax)                
               disable_xticks(ax)
               remove_x_tick_labels()
               remove_y_tick_labels()
               ax = pylab.subplot(gs[2,2])
-              ax.hist([numpy.abs(dsv_complex_v_F0[0].get_value_by_id(c_ids)),numpy.abs(dsv_simple_v_F0[0].get_value_by_id(s_ids))],bins=numpy.arange(0,5,0.5),histtype='barstacked',color=['k','w'],rwidth=0.8,edgecolor='black')
+              ax.hist([numpy.abs(dsv_complex_v_F0[0].get_value_by_id(c_ids)),numpy.abs(dsv_simple_v_F0[0].get_value_by_id(s_ids))],bins=numpy.arange(0,5,0.5),histtype='barstacked',color=['k','w'],rwidth=0.8,ec='black')
               three_tick_axis(ax.xaxis)
               remove_y_tick_labels()
               pylab.xlabel('F0 Vm (mV)',fontsize=19)
@@ -168,7 +156,7 @@ class MRfig(Plotting):
 
                     
           ax = pylab.subplot(gs[0,3])
-          ax.hist(numpy.abs(dsv_simple_v_F1[0].get_value_by_id(s_ids)),bins=numpy.arange(0,10,1.0),color='w',rwidth=0.8,edgecolor='black')
+          ax.hist(numpy.abs(dsv_simple_v_F1[0].get_value_by_id(s_ids)),bins=numpy.arange(0,10,1.0),color='w',rwidth=0.8,ec='black')
           disable_top_right_axis(ax)      
           disable_left_axis(ax)
           disable_xticks(ax)
@@ -177,14 +165,14 @@ class MRfig(Plotting):
           pylab.title(numpy.mean(dsv_simple_v_F1[0].get_value_by_id(s_ids)))
           if self.parameters.ComplexSheetName != 'None':
               ax = pylab.subplot(gs[1,3])
-              ax.hist(numpy.abs(dsv_complex_v_F1[0].get_value_by_id(c_ids)),bins=numpy.arange(0,10,1.0),color='k',rwidth=0.8,edgecolor='black')
+              ax.hist(numpy.abs(dsv_complex_v_F1[0].get_value_by_id(c_ids)),bins=numpy.arange(0,10,1.0),color='k',rwidth=0.8,ec='black')
               disable_top_right_axis(ax)
               disable_left_axis(ax)
               disable_xticks(ax)
               remove_x_tick_labels()
               remove_y_tick_labels()
               ax = pylab.subplot(gs[2,3])
-              ax.hist([numpy.abs(dsv_complex_v_F1[0].get_value_by_id(c_ids)),numpy.abs(dsv_simple_v_F1[0].get_value_by_id(s_ids))],bins=numpy.arange(0,10,1.0),histtype='barstacked',color=['k','w'],rwidth=0.8,edgecolor='black')
+              ax.hist([numpy.abs(dsv_complex_v_F1[0].get_value_by_id(c_ids)),numpy.abs(dsv_simple_v_F1[0].get_value_by_id(s_ids))],bins=numpy.arange(0,10,1.0),histtype='barstacked',color=['k','w'],rwidth=0.8,ec='black')
               three_tick_axis(ax.xaxis)
               remove_y_tick_labels()
               pylab.xlabel('F1 Vm (mV)',fontsize=19)
@@ -209,7 +197,7 @@ class MRfig(Plotting):
           if self.plot_file_name:
                         pylab.savefig(Global.root_directory+self.plot_file_name)
 
-class MRfigReal(Plotting):
+class MRfigRealOLD(Plotting):
       required_parameters = ParameterSet({
             'SimpleSheetName' : str,  #the name of the sheet for which to plot
             'ComplexSheetName' : str, # which neuron to show
@@ -271,9 +259,13 @@ class MRfigReal(Plotting):
           dsv_simple_v_F1 = numpy.append(numpy.array(dsv_l4_v_F1[0].get_value_by_id(l4_ids))[numpy.array(dsv_l4.get_value_by_id(l4_ids))<1.0],numpy.array(dsv_l23_v_F1[0].get_value_by_id(l23_ids))[numpy.array(dsv_l23.get_value_by_id(l23_ids))<1.0])  
           dsv_complex_v_F1 = numpy.append(numpy.array(dsv_l4_v_F1[0].get_value_by_id(l4_ids))[numpy.array(dsv_l4.get_value_by_id(l4_ids))>1.0],numpy.array(dsv_l23_v_F1[0].get_value_by_id(l23_ids))[numpy.array(dsv_l23.get_value_by_id(l23_ids))>1.0])  
 
+	  logger.info("MMMMMMMMMRRRRRRRRRRR: " +str(dsv_l4.values))
+	  logger.info("MMMMMMMMMRRRRRRRRRRR1: " +str(dsv_l23.values))
+	  logger.info("MMMMMMMMMRRRRRRRRRRR2: " +str([dsv_complex,dsv_simple]))
+
           gs = gridspec.GridSpecFromSubplotSpec(3, 7,subplot_spec=gs,wspace=0.3)
           ax = pylab.subplot(gs[0,0])
-          ax.hist(dsv_l4.values,bins=numpy.arange(0,2.2,0.2),color='gray',rwidth=0.8,edgecolor='black')
+          ax.hist(dsv_l4.values,bins=numpy.arange(0,2.2,0.2),color='gray',rwidth=0.8,ec='black')
           disable_top_right_axis(ax)
           disable_left_axis(ax)
           pylab.ylim(0,450)
@@ -283,7 +275,7 @@ class MRfigReal(Plotting):
           pylab.ylabel('Layer 4',fontsize=19)
           ax = pylab.subplot(gs[1,0])
           if self.parameters.ComplexSheetName != 'None':
-              ax.hist(dsv_l23.values,bins=numpy.arange(0,2.2,0.2),color='gray',rwidth=0.8,edgecolor='black')
+              ax.hist(dsv_l23.values,bins=numpy.arange(0,2.2,0.2),color='gray',rwidth=0.8,ec='black')
               disable_top_right_axis(ax)
               disable_left_axis(ax)
               pylab.ylim(0,450)
@@ -293,7 +285,7 @@ class MRfigReal(Plotting):
               pylab.ylabel('Layer 2/3',fontsize=19)
               
               ax = pylab.subplot(gs[2,0])
-              ax.hist([dsv_complex,dsv_simple],bins=numpy.arange(0,2.2,0.2),histtype='barstacked',color=['w','k'],rwidth=0.8,edgecolor='black')
+              ax.hist([dsv_complex,dsv_simple],bins=numpy.arange(0,2.2,0.2),histtype='barstacked',color=['w','k'],rwidth=0.8,ec='black')
               disable_top_right_axis(ax) 
               disable_left_axis(ax)  
               pylab.ylim(0,450)
@@ -308,7 +300,7 @@ class MRfigReal(Plotting):
               
 
           ax = pylab.subplot(gs[0,1])
-          ax.hist(l4_v_mr,bins=numpy.arange(0,6,0.6),color='gray',rwidth=0.8,edgecolor='black')
+          ax.hist(l4_v_mr,bins=numpy.arange(0,6,0.6),color='gray',rwidth=0.8,ec='black')
           disable_top_right_axis(ax)    
           disable_left_axis(ax)      
           disable_xticks(ax)
@@ -317,14 +309,14 @@ class MRfigReal(Plotting):
           pylab.title(numpy.mean(simple_v_mr))
           if self.parameters.ComplexSheetName != 'None':
               ax = pylab.subplot(gs[1,1])
-              ax.hist(l23_v_mr,bins=numpy.arange(0,6,0.6),color='gray',rwidth=0.8,edgecolor='black')
+              ax.hist(l23_v_mr,bins=numpy.arange(0,6,0.6),color='gray',rwidth=0.8,ec='black')
               disable_top_right_axis(ax)
               disable_left_axis(ax)
               disable_xticks(ax)
               remove_x_tick_labels()
               remove_y_tick_labels()
               ax = pylab.subplot(gs[2,1])
-              ax.hist([complex_v_mr,simple_v_mr],bins=numpy.arange(0,6,0.6),histtype='barstacked',color=['w','k'],rwidth=0.8,edgecolor='black')
+              ax.hist([complex_v_mr,simple_v_mr],bins=numpy.arange(0,6,0.6),histtype='barstacked',color=['w','k'],rwidth=0.8,ec='black')
               three_tick_axis(ax.xaxis)
               remove_y_tick_labels()
               pylab.xlabel('F1/F0 Vm',fontsize=19)
@@ -334,7 +326,7 @@ class MRfigReal(Plotting):
               disable_left_axis(ax)                    
 
           ax = pylab.subplot(gs[0,2])
-          ax.hist(numpy.abs(dsv_l4_v_F0[0].get_value_by_id(l4_ids)),bins=numpy.arange(0,5,0.5),color='gray',rwidth=0.8,edgecolor='black')
+          ax.hist(numpy.abs(dsv_l4_v_F0[0].get_value_by_id(l4_ids)),bins=numpy.arange(0,5,0.5),color='gray',rwidth=0.8,ec='black')
           disable_top_right_axis(ax)
           disable_left_axis(ax)                
           disable_left_axis(ax)      
@@ -344,14 +336,14 @@ class MRfigReal(Plotting):
           pylab.title(numpy.mean(dsv_l4_v_F0[0].get_value_by_id(l4_ids)))
           if self.parameters.ComplexSheetName != 'None':
               ax = pylab.subplot(gs[1,2])
-              ax.hist(numpy.abs(dsv_l23_v_F0[0].get_value_by_id(l23_ids)),bins=numpy.arange(0,5,0.5),color='gray',rwidth=0.8,edgecolor='black')
+              ax.hist(numpy.abs(dsv_l23_v_F0[0].get_value_by_id(l23_ids)),bins=numpy.arange(0,5,0.5),color='gray',rwidth=0.8,ec='black')
               disable_top_right_axis(ax) 
               disable_left_axis(ax)                
               disable_xticks(ax)
               remove_x_tick_labels()
               remove_y_tick_labels()
               ax = pylab.subplot(gs[2,2])
-              ax.hist([numpy.abs(dsv_complex_v_F0),numpy.abs(dsv_simple_v_F0)],bins=numpy.arange(0,5,0.5),histtype='barstacked',color=['w','k'],rwidth=0.8,edgecolor='black')
+              ax.hist([numpy.abs(dsv_complex_v_F0),numpy.abs(dsv_simple_v_F0)],bins=numpy.arange(0,5,0.5),histtype='barstacked',color=['w','k'],rwidth=0.8,ec='black')
               three_tick_axis(ax.xaxis)
               remove_y_tick_labels()
               pylab.xlabel('F0 Vm (mV)',fontsize=19)
@@ -362,7 +354,7 @@ class MRfigReal(Plotting):
 
                     
           ax = pylab.subplot(gs[0,3])
-          ax.hist(numpy.abs(dsv_l4_v_F1[0].get_value_by_id(l4_ids)),bins=numpy.arange(0,10,1.0),color='gray',rwidth=0.8,edgecolor='black')
+          ax.hist(numpy.abs(dsv_l4_v_F1[0].get_value_by_id(l4_ids)),bins=numpy.arange(0,10,1.0),color='gray',rwidth=0.8,ec='black')
           disable_top_right_axis(ax)      
           disable_left_axis(ax)
           disable_xticks(ax)
@@ -371,14 +363,14 @@ class MRfigReal(Plotting):
           pylab.title(numpy.mean(dsv_l4_v_F1[0].get_value_by_id(l4_ids)))
           if self.parameters.ComplexSheetName != 'None':
               ax = pylab.subplot(gs[1,3])
-              ax.hist(numpy.abs(dsv_l23_v_F1[0].get_value_by_id(l23_ids)),bins=numpy.arange(0,10,1.0),color='gray',rwidth=0.8,edgecolor='black')
+              ax.hist(numpy.abs(dsv_l23_v_F1[0].get_value_by_id(l23_ids)),bins=numpy.arange(0,10,1.0),color='gray',rwidth=0.8,ec='black')
               disable_top_right_axis(ax)
               disable_left_axis(ax)
               disable_xticks(ax)
               remove_x_tick_labels()
               remove_y_tick_labels()
               ax = pylab.subplot(gs[2,3])
-              ax.hist([numpy.abs(dsv_complex_v_F1),numpy.abs(dsv_simple_v_F1)],bins=numpy.arange(0,10,1.0),histtype='barstacked',color=['w','k'],rwidth=0.8,edgecolor='black')
+              ax.hist([numpy.abs(dsv_complex_v_F1),numpy.abs(dsv_simple_v_F1)],bins=numpy.arange(0,10,1.0),histtype='barstacked',color=['w','k'],rwidth=0.8,ec='black')
               three_tick_axis(ax.xaxis)
               remove_y_tick_labels()
               pylab.xlabel('F1 Vm (mV)',fontsize=19)
@@ -404,6 +396,236 @@ class MRfigReal(Plotting):
           if self.plot_file_name:
                         pylab.savefig(Global.root_directory+self.plot_file_name)
 
+
+
+class MRfigReal(Plotting):
+      required_parameters = ParameterSet({
+            'SimpleSheetName' : str,  #the name of the sheet for which to plot
+            'ComplexSheetName' : str, # which neuron to show
+      })
+
+      def plot(self):
+          self.fig = pylab.figure(facecolor='w', **self.fig_param)
+          gs = gridspec.GridSpec(1, 1)
+          gs.update(left=0.07, right=0.97, top=0.9, bottom=0.1)
+          gs = gs[0,0]
+        
+          dsv_l4 = self.datastore.get_analysis_result(identifier='PerNeuronValue',sheet_name=self.parameters.SimpleSheetName,analysis_algorithm='ModulationRatio',value_name='Modulation ratio(time)')
+          dsv_l23 = self.datastore.get_analysis_result(identifier='PerNeuronValue',sheet_name=self.parameters.ComplexSheetName,analysis_algorithm='ModulationRatio',value_name='Modulation ratio(time)')
+          
+          dsv = queries.param_filter_query(self.datastore,st_name='FullfieldDriftingSinusoidalGrating',st_orientation=0)
+          dsv_l4_v_F0 = dsv.get_analysis_result(identifier='PerNeuronValue',sheet_name=self.parameters.SimpleSheetName,value_name='-(x+y)(F0_Vm,Mean(VM))')
+          dsv_l23_v_F0 = dsv.get_analysis_result(identifier='PerNeuronValue',sheet_name=self.parameters.ComplexSheetName,value_name='-(x+y)(F0_Vm,Mean(VM))')
+          dsv_l4_v_F1 = dsv.get_analysis_result(identifier='PerNeuronValue',sheet_name=self.parameters.SimpleSheetName,value_name='F1_Vm')
+          dsv_l23_v_F1 = dsv.get_analysis_result(identifier='PerNeuronValue',sheet_name=self.parameters.ComplexSheetName,value_name='F1_Vm')
+         
+          dsv_l4_v_F0_inh = dsv.get_analysis_result(identifier='PerNeuronValue',sheet_name='V1_Inh_L4',value_name='-(x+y)(F0_Vm,Mean(VM))')
+          dsv_l23_v_F0_inh = dsv.get_analysis_result(identifier='PerNeuronValue',sheet_name='V1_Inh_L2/3',value_name='-(x+y)(F0_Vm,Mean(VM))')
+          dsv_l4_v_F1_inh = dsv.get_analysis_result(identifier='PerNeuronValue',sheet_name='V1_Inh_L4',value_name='F1_Vm')
+          dsv_l23_v_F1_inh = dsv.get_analysis_result(identifier='PerNeuronValue',sheet_name='V1_Inh_L2/3',value_name='F1_Vm')
+          
+
+          assert len(dsv_l4) == 1,  str(len(dsv_l4))
+          assert len(dsv_l4_v_F0) == 1
+          assert len(dsv_l4_v_F1) == 1
+          if self.parameters.ComplexSheetName != 'None':
+              assert len(dsv_l23) == 1
+              assert len(dsv_l23_v_F0) == 1
+              assert len(dsv_l23_v_F1) == 1
+          
+            
+          l4_ids = dsv_l4_v_F0[0].ids
+          if self.parameters.ComplexSheetName != 'None':
+            l23_ids = dsv_l23_v_F0[0].ids
+
+          l4_ids_inh = dsv_l4_v_F0_inh[0].ids
+          l23_ids_inh = dsv_l23_v_F0_inh[0].ids
+
+            
+          l4_exc_or = self.datastore.full_datastore.get_analysis_result(identifier='PerNeuronValue',value_name = ['LGNAfferentOrientation' , 'ORMapOrientation'], sheet_name = 'V1_Exc_L4')[0]
+          l4_ids = numpy.array(l4_ids)[numpy.nonzero(numpy.array([circular_dist(l4_exc_or.get_value_by_id(i),0,numpy.pi)  for i in l4_ids]) < 0.4)[0]]
+          
+          if self.parameters.ComplexSheetName != 'None':
+              l23_exc_or = self.datastore.full_datastore.get_analysis_result(identifier='PerNeuronValue',value_name = ['LGNAfferentOrientation'  , 'ORMapOrientation'] , sheet_name = 'V1_Exc_L2/3')[0]
+              l23_ids = numpy.array(l23_ids)[numpy.nonzero(numpy.array([circular_dist(l23_exc_or.get_value_by_id(i),0,numpy.pi)  for i in l23_ids]) < 0.4)[0]]
+
+          l4_exc_or_inh = self.datastore.full_datastore.get_analysis_result(identifier='PerNeuronValue',value_name = ['LGNAfferentOrientation' , 'ORMapOrientation'] , sheet_name = 'V1_Inh_L4')[0]
+          l4_ids_inh = numpy.array(l4_ids_inh)[numpy.nonzero(numpy.array([circular_dist(l4_exc_or_inh.get_value_by_id(i),0,numpy.pi)  for i in l4_ids_inh]) < 0.4)[0]]
+          
+          l23_exc_or_inh = self.datastore.full_datastore.get_analysis_result(identifier='PerNeuronValue',value_name = ['LGNAfferentOrientation' , 'ORMapOrientation'] , sheet_name = 'V1_Inh_L2/3')[0]
+          l23_ids_inh = numpy.array(l23_ids_inh)[numpy.nonzero(numpy.array([circular_dist(l23_exc_or_inh.get_value_by_id(i),0,numpy.pi)  for i in l23_ids_inh]) < 0.4)[0]]
+
+
+          
+          print len(l4_ids) , len(l23_ids)
+
+          l4_v_mr = numpy.array(dsv_l4_v_F1[0].get_value_by_id(l4_ids))/numpy.array(dsv_l4_v_F0[0].get_value_by_id(l4_ids))
+          l4_v_mr_inh = numpy.array(dsv_l4_v_F1_inh[0].get_value_by_id(l4_ids_inh))/numpy.array(dsv_l4_v_F0_inh[0].get_value_by_id(l4_ids_inh))
+          dsv_l4 = dsv_l4[0]
+          if self.parameters.ComplexSheetName != 'None':
+            l23_v_mr = numpy.array(dsv_l23_v_F1[0].get_value_by_id(l23_ids))/numpy.array(dsv_l23_v_F0[0].get_value_by_id(l23_ids))
+            l23_v_mr_inh = numpy.array(dsv_l23_v_F1_inh[0].get_value_by_id(l23_ids_inh))/numpy.array(dsv_l23_v_F0_inh[0].get_value_by_id(l23_ids_inh))
+            dsv_l23= dsv_l23[0]
+
+
+
+          dsv_simple = numpy.append(dsv_l4.values[dsv_l4.values<1.0],dsv_l23.values[dsv_l23.values<1.0])
+          dsv_complex = numpy.append(dsv_l4.values[dsv_l4.values>1.0],dsv_l23.values[dsv_l23.values>1.0])
+
+          simple_mr = numpy.append(numpy.array(dsv_l4.get_value_by_id(l4_ids))[numpy.array(dsv_l4.get_value_by_id(l4_ids))<1.0],numpy.array(dsv_l23.get_value_by_id(l23_ids))[numpy.array(dsv_l23.get_value_by_id(l23_ids))<1.0])  
+          complex_mr = numpy.append(numpy.array(dsv_l4.get_value_by_id(l4_ids))[numpy.array(dsv_l4.get_value_by_id(l4_ids))>1.0],numpy.array(dsv_l23.get_value_by_id(l23_ids))[numpy.array(dsv_l23.get_value_by_id(l23_ids))>1.0])  
+
+          simple_v_mr = numpy.append(l4_v_mr[numpy.array(dsv_l4.get_value_by_id(l4_ids))<1.0],l23_v_mr[numpy.array(dsv_l23.get_value_by_id(l23_ids))<1.0])  
+          complex_v_mr = numpy.append(l4_v_mr[numpy.array(dsv_l4.get_value_by_id(l4_ids))>1.0],l23_v_mr[numpy.array(dsv_l23.get_value_by_id(l23_ids))>1.0])  
+          
+          dsv_simple_v_F0 = numpy.append(numpy.array(dsv_l4_v_F0[0].get_value_by_id(l4_ids))[numpy.array(dsv_l4.get_value_by_id(l4_ids))<1.0],numpy.array(dsv_l23_v_F0[0].get_value_by_id(l23_ids))[numpy.array(dsv_l23.get_value_by_id(l23_ids))<1.0])  
+          dsv_complex_v_F0 = numpy.append(numpy.array(dsv_l4_v_F0[0].get_value_by_id(l4_ids))[numpy.array(dsv_l4.get_value_by_id(l4_ids))>1.0],numpy.array(dsv_l23_v_F0[0].get_value_by_id(l23_ids))[numpy.array(dsv_l23.get_value_by_id(l23_ids))>1.0])  
+
+          dsv_simple_v_F1 = numpy.append(numpy.array(dsv_l4_v_F1[0].get_value_by_id(l4_ids))[numpy.array(dsv_l4.get_value_by_id(l4_ids))<1.0],numpy.array(dsv_l23_v_F1[0].get_value_by_id(l23_ids))[numpy.array(dsv_l23.get_value_by_id(l23_ids))<1.0])  
+          dsv_complex_v_F1 = numpy.append(numpy.array(dsv_l4_v_F1[0].get_value_by_id(l4_ids))[numpy.array(dsv_l4.get_value_by_id(l4_ids))>1.0],numpy.array(dsv_l23_v_F1[0].get_value_by_id(l23_ids))[numpy.array(dsv_l23.get_value_by_id(l23_ids))>1.0])  
+
+
+          gs = gridspec.GridSpecFromSubplotSpec(3, 7,subplot_spec=gs,wspace=0.3)
+          ax = pylab.subplot(gs[0,0])
+          ax.hist(dsv_l4.values,bins=numpy.arange(0,2.01,0.2),color='gray',rwidth=0.8)
+          disable_top_right_axis(ax)
+          disable_left_axis(ax)
+          pylab.ylim(0,540)
+          disable_xticks(ax)
+          remove_x_tick_labels()
+          remove_y_tick_labels()
+          pylab.ylabel('Layer 4',fontsize=19)
+          ax = pylab.subplot(gs[1,0])
+          if self.parameters.ComplexSheetName != 'None':
+              ax.hist(dsv_l23.values,bins=numpy.arange(0,2.01,0.2),color='gray',rwidth=0.8)
+              disable_top_right_axis(ax)
+              disable_left_axis(ax)
+              pylab.ylim(0,540)
+              disable_xticks(ax)
+              remove_x_tick_labels()
+              remove_y_tick_labels()
+              pylab.ylabel('Layer 2/3',fontsize=19)
+              
+              ax = pylab.subplot(gs[2,0])
+              ax.hist([dsv_complex,dsv_simple],bins=numpy.arange(0,2.01,0.2),histtype='barstacked',color=['w','k'],rwidth=0.8,ec='black')
+              disable_top_right_axis(ax) 
+              disable_left_axis(ax)  
+              pylab.ylim(0,540)
+              pylab.ylabel('Pooled',fontsize=19)
+              three_tick_axis(ax.xaxis)
+              remove_y_tick_labels()
+              pylab.xlabel('F1/F0 spikes',fontsize=19)
+              for label in ax.get_xticklabels() + ax.get_yticklabels(): 
+                  label.set_fontsize(19) 
+              disable_top_right_axis(ax)
+              disable_left_axis(ax)      
+              
+
+          ax = pylab.subplot(gs[0,1])
+          ax.hist(l4_v_mr,bins=numpy.arange(0,3.01,0.3),color='gray',rwidth=0.8)
+          disable_top_right_axis(ax)    
+          disable_left_axis(ax)      
+          disable_xticks(ax)
+          remove_x_tick_labels()
+          remove_y_tick_labels()
+          pylab.xlim(0,3.0)  
+
+          if self.parameters.ComplexSheetName != 'None':
+              ax = pylab.subplot(gs[1,1])
+              ax.hist(l23_v_mr,bins=numpy.arange(0,3.01,0.3),color='gray',rwidth=0.8)
+              disable_top_right_axis(ax)
+              disable_left_axis(ax)
+              disable_xticks(ax)
+              remove_x_tick_labels()
+              remove_y_tick_labels()
+              pylab.xlim(0,3.0)                    
+              ax = pylab.subplot(gs[2,1])
+              ax.hist([complex_v_mr,simple_v_mr],bins=numpy.arange(0,3.01,0.3),histtype='barstacked',color=['w','k'],rwidth=0.8,ec='black')
+              three_tick_axis(ax.xaxis)
+              remove_y_tick_labels()
+              pylab.xlabel('F1/F0 Vm',fontsize=19)
+              for label in ax.get_xticklabels() + ax.get_yticklabels(): 
+                  label.set_fontsize(19) 
+              disable_top_right_axis(ax) 
+              disable_left_axis(ax)
+              pylab.xlim(0,3.0)                    
+
+          ax = pylab.subplot(gs[0,2])
+          ax.hist(numpy.abs(dsv_l4_v_F0[0].get_value_by_id(l4_ids)),bins=numpy.arange(0,4.01,0.4),color='gray',rwidth=0.8)
+          disable_top_right_axis(ax)
+          disable_left_axis(ax)                
+          disable_left_axis(ax)      
+          disable_xticks(ax)
+          remove_x_tick_labels()
+          remove_y_tick_labels()
+          pylab.xlim(0,4.0)  
+
+          if self.parameters.ComplexSheetName != 'None':
+              ax = pylab.subplot(gs[1,2])
+              ax.hist(numpy.abs(dsv_l23_v_F0[0].get_value_by_id(l23_ids)),bins=numpy.arange(0,4.01,0.4),color='gray',rwidth=0.8)
+              disable_top_right_axis(ax) 
+              disable_left_axis(ax)                
+              disable_xticks(ax)
+              remove_x_tick_labels()
+              remove_y_tick_labels()
+              pylab.xlim(0,4.0)  
+              ax = pylab.subplot(gs[2,2])
+              ax.hist([numpy.abs(dsv_complex_v_F0),numpy.abs(dsv_simple_v_F0)],bins=numpy.arange(0,4.01,0.4),histtype='barstacked',color=['w','k'],rwidth=0.8,ec='black')
+              three_tick_axis(ax.xaxis)
+              remove_y_tick_labels()
+              pylab.xlabel('F0 Vm (mV)',fontsize=19)
+              for label in ax.get_xticklabels() + ax.get_yticklabels(): 
+                  label.set_fontsize(19) 
+              disable_top_right_axis(ax)
+              disable_left_axis(ax)
+              pylab.xlim(0,4.0)  
+
+                    
+          ax = pylab.subplot(gs[0,3])
+          ax.hist(numpy.abs(dsv_l4_v_F1[0].get_value_by_id(l4_ids)),bins=numpy.arange(0,5.01,0.5),color='gray',rwidth=0.8)
+          disable_top_right_axis(ax)      
+          disable_left_axis(ax)
+          disable_xticks(ax)
+          remove_x_tick_labels()
+          remove_y_tick_labels()
+          pylab.xlim(0,5.0)  
+
+          if self.parameters.ComplexSheetName != 'None':
+              ax = pylab.subplot(gs[1,3])
+              ax.hist(numpy.abs(dsv_l23_v_F1[0].get_value_by_id(l23_ids)),bins=numpy.arange(0,5.01,0.5),color='gray',rwidth=0.8)
+              disable_top_right_axis(ax)
+              disable_left_axis(ax)
+              disable_xticks(ax)
+              remove_x_tick_labels()
+              remove_y_tick_labels()
+              pylab.xlim(0,5.0)  
+              ax = pylab.subplot(gs[2,3])
+              ax.hist([numpy.abs(dsv_complex_v_F1),numpy.abs(dsv_simple_v_F1)],bins=numpy.arange(0,5.01,0.5),histtype='barstacked',color=['w','k'],rwidth=0.8,ec='black')
+              three_tick_axis(ax.xaxis)
+              remove_y_tick_labels()
+              pylab.xlabel('F1 Vm (mV)',fontsize=19)
+              for label in ax.get_xticklabels() + ax.get_yticklabels(): 
+                  label.set_fontsize(19) 
+              disable_top_right_axis(ax) 
+              disable_left_axis(ax)
+              pylab.xlim(0,5.0)  
+              
+          logger.info(len(simple_v_mr))
+          logger.info(len(dsv_simple))
+          if self.parameters.ComplexSheetName != 'None':  
+              ggs = gridspec.GridSpecFromSubplotSpec(20, 20, gs[:,4:7])
+              ax = pylab.subplot(ggs[3:18,3:18])
+              ax.plot(simple_v_mr,simple_mr,'ow',label='layer 4')
+              ax.plot(complex_v_mr,complex_mr,'ok',label='layer 2/3')
+              pylab.xlabel('F1/F0 Vm',fontsize=19)
+              pylab.ylabel('F1/F0 Spikes',fontsize=19)
+              pylab.xlim(0,3.0)  
+              pylab.ylim(0,2.0)  
+              for label in ax.get_xticklabels() + ax.get_yticklabels(): 
+                  label.set_fontsize(19) 
+            
+          if self.plot_file_name:
+                        pylab.savefig(Global.root_directory+self.plot_file_name)
 
 
 
@@ -698,8 +920,8 @@ class SpontStatisticsOverview(Plotting):
         
         if True:
             pylab.subplot(gs[0:4,0])
-            r1 = pylab.barh(numpy.array([0.17,0.67])-0.06,[mean_firing_rate_L4E,mean_firing_rate_L23E],height = 0.12,color='#000000',xerr=[std_firing_rate_L4E,std_firing_rate_L23E],error_kw=dict(ecolor='gray', lw=2, capsize=5, capthick=2),edgecolor='k')
-            r2 = pylab.barh(numpy.array([0.33,0.83])-0.06,[mean_firing_rate_L4I,mean_firing_rate_L23I],height = 0.12,color='#FFFFFF',xerr=[std_firing_rate_L4I,std_firing_rate_L23I],error_kw=dict(ecolor='gray', lw=2, capsize=5, capthick=2),edgecolor='k')
+            r1 = pylab.barh(numpy.array([0.17,0.67])-0.06,[mean_firing_rate_L4E,mean_firing_rate_L23E],height = 0.12,color='#000000',xerr=[std_firing_rate_L4E,std_firing_rate_L23E],error_kw=dict(ecolor='gray', lw=2, capsize=5, capthick=2),ec='k')
+            r2 = pylab.barh(numpy.array([0.33,0.83])-0.06,[mean_firing_rate_L4I,mean_firing_rate_L23I],height = 0.12,color='#FFFFFF',xerr=[std_firing_rate_L4I,std_firing_rate_L23I],error_kw=dict(ecolor='gray', lw=2, capsize=5, capthick=2),ec='k')
             pylab.ylim(0,1.0)
             pylab.xlim(0,8.0)
             pylab.yticks([0.25,0.75],['L4','L2/3'])
@@ -713,8 +935,8 @@ class SpontStatisticsOverview(Plotting):
 
             
             pylab.subplot(gs[4:8,0])
-            r1 = pylab.barh(numpy.array([0.17,0.67])-0.06,[mean_CV_L4E,mean_CV_L23E],height = 0.12,color='#000000',xerr=[std_CV_L4E,std_CV_L23E],error_kw=dict(ecolor='gray', lw=2, capsize=5, capthick=2),edgecolor='k')
-            r2 = pylab.barh(numpy.array([0.33,0.83])-0.06,[mean_CV_L4I,mean_CV_L23I],height = 0.12,color='#FFFFFF',xerr=[std_CV_L4I,std_CV_L23I],error_kw=dict(ecolor='gray', lw=2, capsize=5, capthick=2),edgecolor='k')
+            r1 = pylab.barh(numpy.array([0.17,0.67])-0.06,[mean_CV_L4E,mean_CV_L23E],height = 0.12,color='#000000',xerr=[std_CV_L4E,std_CV_L23E],error_kw=dict(ecolor='gray', lw=2, capsize=5, capthick=2),ec='k')
+            r2 = pylab.barh(numpy.array([0.33,0.83])-0.06,[mean_CV_L4I,mean_CV_L23I],height = 0.12,color='#FFFFFF',xerr=[std_CV_L4I,std_CV_L23I],error_kw=dict(ecolor='gray', lw=2, capsize=5, capthick=2),ec='k')
             pylab.ylim(0,1.0)
             pylab.xlim(0,2.0)
             pylab.yticks([0.25,0.75],['L4','L2/3'])
@@ -728,8 +950,8 @@ class SpontStatisticsOverview(Plotting):
        
 
             pylab.subplot(gs[8:12,0])
-            r1 = pylab.barh(numpy.array([0.17,0.67])-0.06,[mean_CC_L4E,mean_CC_L23E],height = 0.12,color='#000000',xerr=[std_CC_L4E,std_CC_L23E],error_kw=dict(ecolor='gray', lw=2, capsize=5, capthick=2),edgecolor='k')
-            r2 = pylab.barh(numpy.array([0.33,0.83])-0.06,[mean_CC_L4I,mean_CC_L23I],height = 0.12,color='#FFFFFF',xerr=[std_CC_L4I,std_CC_L23I],error_kw=dict(ecolor='gray', lw=2, capsize=5, capthick=2),edgecolor='k')
+            r1 = pylab.barh(numpy.array([0.17,0.67])-0.06,[mean_CC_L4E,mean_CC_L23E],height = 0.12,color='#000000',xerr=[std_CC_L4E,std_CC_L23E],error_kw=dict(ecolor='gray', lw=2, capsize=5, capthick=2),ec='k')
+            r2 = pylab.barh(numpy.array([0.33,0.83])-0.06,[mean_CC_L4I,mean_CC_L23I],height = 0.12,color='#FFFFFF',xerr=[std_CC_L4I,std_CC_L23I],error_kw=dict(ecolor='gray', lw=2, capsize=5, capthick=2),ec='k')
             pylab.ylim(0,1.0)
             pylab.xlim(0,0.3)
             pylab.yticks([0.25,0.75],['L4','L2/3'])
@@ -742,8 +964,8 @@ class SpontStatisticsOverview(Plotting):
             autolabel(r2,offset=0.6)
             
             pylab.subplot(gs[0:4,1])
-            r1 = pylab.barh(numpy.array([0.17,0.67])-0.06,[abs(mean_VM_L4E),numpy.abs(mean_VM_L23E)],height = 0.12,color='#000000',xerr=[std_VM_L4E,std_VM_L23E],error_kw=dict(ecolor='gray', lw=2, capsize=5, capthick=2),edgecolor='k')
-            r2 = pylab.barh(numpy.array([0.33,0.83])-0.06,[abs(mean_VM_L4I),numpy.abs(mean_VM_L23I)],height = 0.12,color='#FFFFFF',xerr=[std_VM_L4I,std_VM_L23I],error_kw=dict(ecolor='gray', lw=2, capsize=5, capthick=2),edgecolor='k')
+            r1 = pylab.barh(numpy.array([0.17,0.67])-0.06,[abs(mean_VM_L4E),numpy.abs(mean_VM_L23E)],height = 0.12,color='#000000',xerr=[std_VM_L4E,std_VM_L23E],error_kw=dict(ecolor='gray', lw=2, capsize=5, capthick=2),ec='k')
+            r2 = pylab.barh(numpy.array([0.33,0.83])-0.06,[abs(mean_VM_L4I),numpy.abs(mean_VM_L23I)],height = 0.12,color='#FFFFFF',xerr=[std_VM_L4I,std_VM_L23I],error_kw=dict(ecolor='gray', lw=2, capsize=5, capthick=2),ec='k')
             pylab.ylim(0,1.0)
             pylab.xlim(40,80)
             pylab.xticks([40,60,80],[-40,-60,-80])
@@ -757,8 +979,8 @@ class SpontStatisticsOverview(Plotting):
             autolabel(r2)
 
             pylab.subplot(gs[4:8,1])
-            r1 = pylab.barh(numpy.array([0.17,0.67])-0.06,[mean_CondE_L4E*1000,mean_CondE_L23E*1000],height = 0.12,color='#000000',xerr=[std_CondE_L4E*1000,std_CondE_L23E*1000],error_kw=dict(ecolor='gray', lw=2, capsize=5, capthick=2),edgecolor='k')
-            r2 = pylab.barh(numpy.array([0.33,0.83])-0.06,[mean_CondE_L4I*1000,mean_CondE_L23I*1000],height = 0.12,color='#FFFFFF',xerr=[std_CondE_L4I*1000,std_CondE_L23I*1000],error_kw=dict(ecolor='gray', lw=2, capsize=5, capthick=2),edgecolor='k')
+            r1 = pylab.barh(numpy.array([0.17,0.67])-0.06,[mean_CondE_L4E*1000,mean_CondE_L23E*1000],height = 0.12,color='#000000',xerr=[std_CondE_L4E*1000,std_CondE_L23E*1000],error_kw=dict(ecolor='gray', lw=2, capsize=5, capthick=2),ec='k')
+            r2 = pylab.barh(numpy.array([0.33,0.83])-0.06,[mean_CondE_L4I*1000,mean_CondE_L23I*1000],height = 0.12,color='#FFFFFF',xerr=[std_CondE_L4I*1000,std_CondE_L23I*1000],error_kw=dict(ecolor='gray', lw=2, capsize=5, capthick=2),ec='k')
             pylab.ylim(0,1.0)
             pylab.xlim(0,2.0)
             pylab.yticks([0.25,0.75],['L4','L2/3'])
@@ -771,8 +993,8 @@ class SpontStatisticsOverview(Plotting):
             autolabel(r2)
 
             pylab.subplot(gs[8:12,1])
-            r1 = pylab.barh(numpy.array([0.17,0.67])-0.06,[mean_CondI_L4E*1000,mean_CondI_L23E*1000],height = 0.12,color='#000000',xerr=[std_CondI_L4E*1000,std_CondI_L23E*1000],error_kw=dict(ecolor='gray', lw=2, capsize=5, capthick=2),edgecolor='k')
-            r2 = pylab.barh(numpy.array([0.33,0.83])-0.06,[mean_CondI_L4I*1000,mean_CondI_L23I*1000],height = 0.12,color='#FFFFFF',xerr=[std_CondI_L4I*1000,std_CondI_L23I*1000],error_kw=dict(ecolor='gray', lw=2, capsize=5, capthick=2),edgecolor='k')
+            r1 = pylab.barh(numpy.array([0.17,0.67])-0.06,[mean_CondI_L4E*1000,mean_CondI_L23E*1000],height = 0.12,color='#000000',xerr=[std_CondI_L4E*1000,std_CondI_L23E*1000],error_kw=dict(ecolor='gray', lw=2, capsize=5, capthick=2),ec='k')
+            r2 = pylab.barh(numpy.array([0.33,0.83])-0.06,[mean_CondI_L4I*1000,mean_CondI_L23I*1000],height = 0.12,color='#FFFFFF',xerr=[std_CondI_L4I*1000,std_CondI_L23I*1000],error_kw=dict(ecolor='gray', lw=2, capsize=5, capthick=2),ec='k')
             pylab.ylim(0,1.0)
             pylab.xlim(0,10)
             pylab.yticks([0.25,0.75],['L4','L2/3'])
@@ -1169,22 +1391,22 @@ class OrientationTuningSummaryFiringRates(Plotting):
         plots['HWHHInhL23'] = (PerNeuronValueScatterPlot(dsv, ParameterSet({'only_matching_units' : True, 'ignore_nan' : True})),gs[21:27,17:23],{'x_lim': (0,50),'y_lim' : (0,50),'identity_line' : True, 'x_label' : 'HWHH Cont. 100%','y_label' : 'HWHH cont. 5%', 'cmp' : None,'title' : None})
 
         dsv = queries.param_filter_query(self.datastore,value_name=['orientation HWHH of Firing rate'],sheet_name=[self.parameters.exc_sheet_name1],st_contrast=[100])    
-        plots['HWHHHistogramExcL4'] = (PerNeuronValuePlot(dsv, ParameterSet({'cortical_view' : False, 'neurons' :  list(responsive_spike_ids1)})),gs[0:6,26:32],{ 'x_lim' : (0.0,50.0), 'x_label' : None,'title' : None,'y_label' : '# neurons'})
+        plots['HWHHHistogramExcL4'] = (PerNeuronValuePlot(dsv, ParameterSet({'cortical_view' : False})),gs[0:6,26:32],{ 'x_lim' : (0.0,50.0), 'x_label' : None,'title' : None,'y_label' : '# neurons'})
         dsv = queries.param_filter_query(self.datastore,value_name=['orientation HWHH of Firing rate'],sheet_name=[self.parameters.inh_sheet_name1],st_contrast=[100])    
-        plots['HWHHHistogramInhL4'] = (PerNeuronValuePlot(dsv, ParameterSet({'cortical_view' : False, 'neurons':  list(responsive_spike_ids_inh1)})),gs[7:13,26:32],{ 'x_lim' : (0.0,50.0), 'x_label' : None,'title' : None,'y_label' : '# neurons'})
+        plots['HWHHHistogramInhL4'] = (PerNeuronValuePlot(dsv, ParameterSet({'cortical_view' : False})),gs[7:13,26:32],{ 'x_lim' : (0.0,50.0), 'x_label' : None,'title' : None,'y_label' : '# neurons'})
         dsv = queries.param_filter_query(self.datastore,value_name=['orientation HWHH of Firing rate'],sheet_name=[self.parameters.exc_sheet_name2],st_contrast=[100])    
-        plots['HWHHHistogramExcL23'] = (PerNeuronValuePlot(dsv, ParameterSet({'cortical_view' : False, 'neurons':  list(responsive_spike_ids2)})),gs[14:20,26:32],{ 'x_lim' : (0.0,50.0), 'x_label' : None,'title' : None,'y_label' : '# neurons'})
+        plots['HWHHHistogramExcL23'] = (PerNeuronValuePlot(dsv, ParameterSet({'cortical_view' : False})),gs[14:20,26:32],{ 'x_lim' : (0.0,50.0), 'x_label' : None,'title' : None,'y_label' : '# neurons'})
         dsv = queries.param_filter_query(self.datastore,value_name=['orientation HWHH of Firing rate'],sheet_name=[self.parameters.inh_sheet_name2],st_contrast=[100])    
-        plots['HWHHHistogramInhL23'] = (PerNeuronValuePlot(dsv, ParameterSet({'cortical_view' : False, 'neurons' :  list(responsive_spike_ids_inh2)})),gs[21:27,26:32],{ 'x_lim' : (0.0,50.0), 'x_label' : 'HWHH (100% cont.)','title' : None,'y_label' : '# neurons'})
+        plots['HWHHHistogramInhL23'] = (PerNeuronValuePlot(dsv, ParameterSet({'cortical_view' : False})),gs[21:27,26:32],{ 'x_lim' : (0.0,50.0), 'x_label' : 'HWHH (100% cont.)','title' : None,'y_label' : '# neurons'})
 
         dsv = queries.param_filter_query(self.datastore,value_name=['orientation CV(Firing rate)'],sheet_name=[self.parameters.exc_sheet_name1],st_contrast=[100])    
-        plots['CVHistogramExcL4'] = (PerNeuronValuePlot(dsv, ParameterSet({'cortical_view' : False, 'neurons' : list(responsive_spike_ids1)})),gs[0:6,33:39],{ 'x_lim' : (0.0,1.0), 'x_label' : None,'title' : None,'y_label' : None})
+        plots['CVHistogramExcL4'] = (PerNeuronValuePlot(dsv, ParameterSet({'cortical_view' : False })),gs[0:6,33:39],{ 'x_lim' : (0.0,1.0), 'x_label' : None,'title' : None,'y_label' : None})
         dsv = queries.param_filter_query(self.datastore,value_name=['orientation CV(Firing rate)'],sheet_name=[self.parameters.inh_sheet_name1],st_contrast=[100])    
-        plots['CVHistogramInhL4'] = (PerNeuronValuePlot(dsv, ParameterSet({'cortical_view' : False, 'neurons' :  list(responsive_spike_ids_inh1)})),gs[7:13,33:39],{ 'x_lim' : (0.0,1.0), 'x_label' : None,'title' : None,'y_label' : None})
+        plots['CVHistogramInhL4'] = (PerNeuronValuePlot(dsv, ParameterSet({'cortical_view' : False })),gs[7:13,33:39],{ 'x_lim' : (0.0,1.0), 'x_label' : None,'title' : None,'y_label' : None})
         dsv = queries.param_filter_query(self.datastore,value_name=['orientation CV(Firing rate)'],sheet_name=[self.parameters.exc_sheet_name2],st_contrast=[100])    
-        plots['CVHistogramExcL23'] = (PerNeuronValuePlot(dsv, ParameterSet({'cortical_view' : False, 'neurons':   list(responsive_spike_ids2)})),gs[14:20,33:39],{ 'x_lim' : (0.0,1.0), 'x_label' : None,'title' : None,'y_label' : None})
+        plots['CVHistogramExcL23'] = (PerNeuronValuePlot(dsv, ParameterSet({'cortical_view' : False})),gs[14:20,33:39],{ 'x_lim' : (0.0,1.0), 'x_label' : None,'title' : None,'y_label' : None})
         dsv = queries.param_filter_query(self.datastore,value_name=['orientation CV(Firing rate)'],sheet_name=[self.parameters.inh_sheet_name2],st_contrast=[100])    
-        plots['CVHistogramInhL23'] = (PerNeuronValuePlot(dsv, ParameterSet({'cortical_view' : False, 'neurons':   list(responsive_spike_ids_inh2)})),gs[21:27,33:39],{ 'x_lim' : (0.0,1.0), 'x_label' : 'CV (100% cont.)','title' : None,'y_label' : None})
+        plots['CVHistogramInhL23'] = (PerNeuronValuePlot(dsv, ParameterSet({'cortical_view' : False})),gs[21:27,33:39],{ 'x_lim' : (0.0,1.0), 'x_label' : 'CV (100% cont.)','title' : None,'y_label' : None})
 
         return plots
 
@@ -1415,7 +1637,7 @@ class TrialCrossCorrelationAnalysis(Plotting):
                 Plotting.__init__(self, datastore, parameters, plot_file_name, fig_param,frame_duration)
 
         def calculate_cc(self,sheet_name,neurons):
-                orr = list(set([MozaikParametrized.idd(s).orientation for s in queries.param_filter_query(self.datastore,st_name='FullfieldDriftingSinusoidalGrating',st_contrast=100).get_stimuli()]))        
+                orr = list(set([MozaikParametrized.idd(s).orientation for s in queries.param_filter_query(self.datastore,st_name='FullfieldDriftingSinusoidalGrating',st_contrast=100).get_stimuli()]))
                 oor = self.datastore.get_analysis_result(identifier='PerNeuronValue',value_name = 'orientation preference', sheet_name = sheet_name)
                 
                 vm_gr_asls = []
@@ -1426,8 +1648,11 @@ class TrialCrossCorrelationAnalysis(Plotting):
                 if True:
                     for neuron_idd in neurons:
                         col = orr[numpy.argmin([circular_dist(o,oor[0].get_value_by_id(neuron_idd),numpy.pi)  for o in orr])]
+	                logger.info("HOHOHOA: " + str(col))
                         dsv =  queries.param_filter_query(dsv1,y_axis_name='trial-trial cross-correlation of Vm (no AP)',st_orientation=col,ads_unique=True)
+			dsv.print_content()
                         vm_gr_asls.append(dsv.get_analysis_result()[0].get_asl_by_id(neuron_idd))
+	                logger.info("HOHOHOB: " + str(len(vm_gr_asls[-1])))
                         dsv =  queries.param_filter_query(dsv1,y_axis_name='trial-trial cross-correlation of psth (bin=10.0)',st_orientation=col,ads_unique=True)
                         psth_gr_asls.append(dsv.get_analysis_result()[0].get_asl_by_id(neuron_idd))
 
@@ -1467,9 +1692,13 @@ class TrialCrossCorrelationAnalysis(Plotting):
             
             vm_cc_gr_pool,psth_cc_gr_pool,vm_cc_ni_pool,psth_cc_ni_pool = (vm_cc_gr_s1+vm_cc_gr_s2)/2,(psth_cc_gr_s1+psth_cc_gr_s2)/2,(vm_cc_ni_s1+vm_cc_ni_s2)/2,(psth_cc_ni_s1+psth_cc_ni_s2)/2
             
+
+	    
             z = int(min(self.parameters.window_length,(len(vm_cc_gr_s1)-1)/2,(len(vm_cc_gr_s2)-1)/2)/2)*2
-            
-            a = 0.6
+            logger.info("HOHOHO1: " + str(z))
+            logger.info("HOHOHO2: " + str(len(vm_cc_gr_s2)))
+            logger.info("HOHOHO3: " + str(len(vm_cc_gr_s1)))
+            #a = 0.6
             
             p0,p1,p2,p3 = self._fitgaussian(numpy.linspace(-z,z,z+1),psth_cc_gr_s1[int(len(psth_cc_gr_s1)/2)-z/2:int(len(psth_cc_gr_s1)/2)+z/2+1])
             print "GR_SP_L4: ", p1+p0,p2
@@ -1530,16 +1759,16 @@ class SizeTuningOverview(Plotting):
             plots['L23ExcVm'] = (PlotTuningCurve(dsv, ParameterSet({'parameter_name' : 'radius', 'neurons': self.parameters.l23_neurons_analog, 'sheet_name' : 'V1_Exc_L2/3','centered'  : False,'mean' : True, 'polar' : False, 'pool'  : False})),gs[4:8,5:9],{'fontsize' : fontsize,'title' : None,'y_label' : r'Vm (mV)','colors' : {'contrast : 100' : '#000000' , 'contrast : ' + low_contrast : '#0073B3'}})
                 
         dsv = param_filter_query(self.datastore,value_name=['Suppression index of Firing rate'],sheet_name='V1_Exc_L4')   
-        plots['L4ExcSI'] = (PerNeuronValuePlot(dsv, ParameterSet({'cortical_view' : False, 'neurons' :  list(self.parameters.l4_neurons)})),gs[0:4,10:14],{'fontsize' : fontsize,'title' : None,'x_label' : None , 'y_label' : '# neurons', 'x_axis' : False, 'x_ticks' : False,'num_bins': 10,'mark_mean' : True,'x_lim' : (0,1.0), 'y_lim' : (0,20),'colors' : {'contrast : 100' : '#000000' , 'contrast : ' + low_contrast : '#0073B3'}})
+        plots['L4ExcSI'] = (PerNeuronValuePlot(dsv, ParameterSet({'cortical_view' : False})),gs[0:4,10:14],{'fontsize' : fontsize,'title' : None,'x_label' : None , 'y_label' : '# neurons', 'x_axis' : False, 'x_ticks' : False,'num_bins': 10,'mark_mean' : True,'x_lim' : (0,1.0), 'y_lim' : (0,20),'colors' : {'contrast : 100' : '#000000' , 'contrast : ' + low_contrast : '#0073B3'}})
         if self.parameters.l23_neurons != []:
             dsv = param_filter_query(self.datastore,value_name=['Suppression index of Firing rate'],sheet_name='V1_Exc_L2/3')   
-            plots['L2/3ExcSI'] = (PerNeuronValuePlot(dsv, ParameterSet({'cortical_view' : False, 'neurons' :  list(self.parameters.l23_neurons)})),gs[4:8,10:14],{'fontsize' : fontsize,'title' : None,'x_label' : None , 'y_label' : '# neurons', 'x_label' : 'Suppression index' ,'num_bins': 10,'mark_mean' : True,'x_lim' : (0,1.0), 'y_lim' : (0,20),'colors' : {'contrast : 100' : '#000000' , 'contrast : ' + low_contrast : '#0073B3'}})
+            plots['L2/3ExcSI'] = (PerNeuronValuePlot(dsv, ParameterSet({'cortical_view' : False})),gs[4:8,10:14],{'fontsize' : fontsize,'title' : None,'x_label' : None , 'y_label' : '# neurons', 'x_label' : 'Suppression index' ,'num_bins': 10,'mark_mean' : True,'x_lim' : (0,1.0), 'y_lim' : (0,20),'colors' : {'contrast : 100' : '#000000' , 'contrast : ' + low_contrast : '#0073B3'}})
 
         dsv = param_filter_query(self.datastore,value_name=['Max. facilitation radius of Firing rate'],sheet_name='V1_Exc_L4')   
-        plots['L4ExcMaxFacilitationRadius'] = (PerNeuronValuePlot(dsv, ParameterSet({'cortical_view' : False, 'neurons' :  list(self.parameters.l4_neurons)})),gs[0:4,15:19],{'fontsize' : fontsize,'title' : None,'x_label' : None , 'y_label' : '# neurons', 'x_axis' : False, 'x_ticks' : False,'num_bins': 8,'mark_mean' : True,'x_lim' : (0,4.0), 'y_lim' : (0,20),'colors' : {'contrast : 100' : '#000000' , 'contrast : ' + low_contrast : '#0073B3'}})
+        plots['L4ExcMaxFacilitationRadius'] = (PerNeuronValuePlot(dsv, ParameterSet({'cortical_view' : False})),gs[0:4,15:19],{'fontsize' : fontsize,'title' : None,'x_label' : None , 'y_label' : '# neurons', 'x_axis' : False, 'x_ticks' : False,'num_bins': 8,'mark_mean' : True,'x_lim' : (0,4.0), 'y_lim' : (0,20),'colors' : {'contrast : 100' : '#000000' , 'contrast : ' + low_contrast : '#0073B3'}})
         if self.parameters.l23_neurons != []:
             dsv = param_filter_query(self.datastore,value_name=['Max. facilitation radius of Firing rate'],sheet_name='V1_Exc_L2/3')   
-            plots['L2/3ExcMaxFacilitationRadius'] = (PerNeuronValuePlot(dsv, ParameterSet({'cortical_view' : False, 'neurons' :  list(self.parameters.l23_neurons)})),gs[4:8,15:19],{'fontsize' : fontsize,'title' : None,'x_label' : None , 'y_label' : '# neurons', 'x_label' : 'Maximum facillitation radius' ,'num_bins': 8,'mark_mean' : True,'x_lim' : (0,4.0), 'y_lim' : (0,20),'colors' : {'contrast : 100' : '#000000' , 'contrast : ' + low_contrast : '#0073B3'}})
+            plots['L2/3ExcMaxFacilitationRadius'] = (PerNeuronValuePlot(dsv, ParameterSet({'cortical_view' : False})),gs[4:8,15:19],{'fontsize' : fontsize,'title' : None,'x_label' : None , 'y_label' : '# neurons', 'x_label' : 'Maximum facillitation radius' ,'num_bins': 8,'mark_mean' : True,'x_lim' : (0,4.0), 'y_lim' : (0,20),'colors' : {'contrast : 100' : '#000000' , 'contrast : ' + low_contrast : '#0073B3'}})
 
         dsv = param_filter_query(self.datastore,st_name='DriftingSinusoidalGratingDisk',value_name=['F1_Exc_Cond','F1_Inh_Cond'])    
         #dsv = param_filter_query(self.datastore,st_name='DriftingSinusoidalGratingDisk',value_name=['(x+y)(F0_Exc_Cond,F1_Exc_Cond)','(x+y)(F0_Inh_Cond,F1_Inh_Cond)'])    
@@ -1820,9 +2049,9 @@ class SizeTuningOverviewNew(Plotting):
                   label.set_fontsize(19)
           pylab.ylabel('conductance (nS)',fontsize=fontsize)
 
-        nice_neuron_l4 = 25432
-        not_nice_neuron_l4 = 34816
-        nice_neuron_l23 = 60674
+        nice_neuron_l4 = self.parameters.l4_neurons_analog[0]#25432
+        not_nice_neuron_l4 = self.parameters.l4_neurons_analog[1]#34816
+        nice_neuron_l23 = self.parameters.l23_neurons_analog[0]#60674
 
         example_neuron(nice_neuron_l4,0,'V1_Exc_L4')  
         example_neuron(not_nice_neuron_l4,1,'V1_Exc_L4')  

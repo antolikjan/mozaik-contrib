@@ -5,12 +5,20 @@ import numpy
 import time
 
 if True:
-    CombinationParameterSearch(SlurmSequentialBackendIoV(num_threads=1,num_mpi=12),{
+    CombinationParameterSearch(SlurmSequentialBackendIoV(num_threads=1,num_mpi=8),{
 									     'sheets.l4_cortex_exc.K' : [1000],
-									     'sheets.l4_cortex_exc.params.density' : [1500,2000],
-									     'sheets.retina_lgn.params.gain_control.gain' : [10,15],
-									     'sheets.retina_lgn.params.noise.stdev' : [2.4],
-									     'sheets.l4_cortex_exc.L4ExcL4InhConnection.base_weight' : [0.00085,0.0008],
+									     'sheets.l4_cortex_exc.params.sx' : [7000],
+									     'sheets.l4_cortex_exc.params.density' : [500],
+									     'sheets.retina_lgn.params.gain_control.gain' : [10],
+									     'sheets.retina_lgn.params.noise.stdev' : [1.3,1.25,1.2,1.15],
+									     'sheets.l4_cortex_exc.params.cell.params.tau_syn_E' : [7.5],
+									     'sheets.l4_cortex_exc.params.cell.params.tau_syn_I' : [9.2],
+									     'sheets.l4_cortex_exc.AfferentConnection.size' : [0.17],
+									     'sheets.l4_cortex_exc.AfferentConnection.aspect_ratio' : [0.4],
+									     'sheets.l4_cortex_exc.L4ExcL4InhConnection.base_weight' : [0.0008],
+									     'sheets.l4_cortex_inh.L4InhL4ExcConnection.base_weight' : [0.0025],
+									     'sheets.l4_cortex_exc.L4ExcL4ExcConnection.short_term_plasticity.tau_rec' : [10],
+									     'sheets.l4_cortex_exc.AfferentConnection.short_term_plasticity.tau_rec' : [300],
 									     }).run_parameter_search()
 
 
