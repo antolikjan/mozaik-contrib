@@ -38,7 +38,14 @@
         
     'L4InhL4ExcConnection': {
         'target_synapses' : 'inhibitory',               
-    	'short_term_plasticity': ref('sheets.l4_cortex_exc.L4ExcL4ExcConnection.short_term_plasticity'),
+
+        'short_term_plasticity': {
+		            'U': 0.75, 
+		            'tau_rec': 30, 
+    	                'tau_psc': 3.0,
+		            'tau_fac': 0.0,
+                        },
+
         'weight_functions' : {  
                                 'f1' : {
                                          'component' : 'mozaik.connectors.vision.V1CorrelationBasedConnectivity',
@@ -77,7 +84,7 @@
 
     'L4InhL4InhConnection':  {
         'target_synapses' : 'inhibitory',               
-    	'short_term_plasticity': ref('sheets.l4_cortex_exc.L4ExcL4ExcConnection.short_term_plasticity'),
+    	'short_term_plasticity': ref('sheets.l4_cortex_inh.L4InhL4ExcConnection.short_term_plasticity'),
         'weight_functions' : {  
                                 'f1' : {
                                          'component' : 'mozaik.connectors.vision.V1CorrelationBasedConnectivity',
