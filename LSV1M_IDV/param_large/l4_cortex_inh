@@ -41,7 +41,7 @@
 
         'short_term_plasticity': {
 		            'U': 0.75, 
-		            'tau_rec': 30, 
+		            'tau_rec': 15, 
     	                'tau_psc': 3.0,
 		            'tau_fac': 0.0,
                         },
@@ -78,7 +78,7 @@
 
         'weight_expression' : ref('sheets.l4_cortex_exc.L4ExcL4ExcConnection.weight_expression'),
         'delay_expression' : ref('sheets.l4_cortex_exc.L4ExcL4ExcConnection.delay_expression'),
-        'base_weight': 0.0021,
+        'base_weight': 0.0019,
         'num_samples' : ref('sheets.l4_cortex_exc.K')/5.0,
     },
 
