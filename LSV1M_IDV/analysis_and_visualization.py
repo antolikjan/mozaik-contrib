@@ -8,7 +8,7 @@ from mozaik.storage.datastore import PickledDataStore
 from mozaik.controller import Global
 
 import sys
-sys.path.append('/home/jantolik/projects/mozaiknew/contrib')
+sys.path.append('/home/antolikjan/projects/mozaik/contrib')
 import Kremkow_plots
 from Kremkow_plots import *
 from lsv1m_paper import *
@@ -999,6 +999,8 @@ def perform_analysis_and_visualization(data_store):
             #dsv = param_filter_query(data_store,sheet_name=['V1_Exc_L4','V1_Inh_L4'],value_name='orientation preference of Firing rate',analysis_algorithm='PeriodicTuningCurvePreferenceAndSelectivity_VectorAverage',st_contrast=100)    
             #PerNeuronValuePlot(dsv,ParameterSet({"cortical_view" : True}),plot_file_name='ORComputed.png').plot()
             
+    
+
 def perform_analysis_and_visualization_spont(data_store):
     sheets = list(set(data_store.sheets()) & set(['V1_Exc_L4','V1_Inh_L4','V1_Exc_L2/3','V1_Inh_L2/3']))
     l23_flag = 'V1_Exc_L2/3' in set(sheets)
@@ -1020,24 +1022,27 @@ def perform_analysis_and_visualization_spont(data_store):
         spike_ids23 = []
         spike_ids_inh23 = []
 
+    dsv = param_filter_query(data_store,st_name=['InternalStimulus'],st_direct_stimulation_name=None)    
+    RasterPlot(dsv,ParameterSet({'sheet_name' : 'V1_Exc_L4', 'neurons' : spike_ids,'trial_averaged_histogram': False, 'spontaneous' : False}),fig_param={'dpi' : 100,'figsize': (28,12)},plot_file_name='SSExcRasterL4.png').plot({'SpikeRasterPlot.group_trials':True})
+    RasterPlot(dsv,ParameterSet({'sheet_name' : 'V1_Inh_L4', 'neurons' : spike_ids_inh,'trial_averaged_histogram': False, 'spontaneous' : False}),fig_param={'dpi' : 100,'figsize': (28,12)},plot_file_name='SSInhRasterL4.png').plot({'SpikeRasterPlot.group_trials':True})
 
-    dsv = param_filter_query(data_store,st_direct_stimulation_name=None,st_name="InternalStimulus")   
-    TrialAveragedFiringRate(dsv,ParameterSet({})).analyse()
-    Analog_MeanSTDAndFanoFactor(param_filter_query(dsv,st_direct_stimulation_name=None),ParameterSet({})).analyse()
-    TrialAveragedVarianceAndVarianceRatioOfConductances(param_filter_query(dsv,st_direct_stimulation_name=None),ParameterSet({})).analyse()
-    PSTH(param_filter_query(dsv,st_direct_stimulation_name=None),ParameterSet({'bin_length' : 10.0})).analyse()
+    TrialAveragedFiringRate(data_store,ParameterSet({})).analyse()
+    Analog_MeanSTDAndFanoFactor(param_filter_query(data_store,st_direct_stimulation_name=None),ParameterSet({})).analyse()
+    TrialAveragedVarianceAndVarianceRatioOfConductances(param_filter_query(data_store,st_direct_stimulation_name=None),ParameterSet({})).analyse()
+    PSTH(param_filter_query(data_store,st_direct_stimulation_name=None),ParameterSet({'bin_length' : 10.0})).analyse()
     Irregularity(param_filter_query(data_store,st_direct_stimulation_name=None),ParameterSet({})).analyse()
     CrossCorrelationOfExcitatoryAndInhibitoryConductances(param_filter_query(data_store,st_direct_stimulation_name=None),ParameterSet({})).analyse()
     NeuronToNeuronAnalogSignalCorrelations(param_filter_query(data_store,analysis_algorithm='PSTH'),ParameterSet({'convert_nan_to_zero' : True})).analyse()
-    PopulationMeanAndVar(data_store,ParameterSet({})).analyse()
+    
+    dsv = param_filter_query(data_store,st_direct_stimulation_name=None,st_name="InternalStimulus",sheet_name=sheets,identifier='PerNeuronValue')   
+    dsv.print_content()
+    PopulationMeanAndVar(dsv,ParameterSet({})).analyse()
     data_store.save()
     
     dsv = param_filter_query(data_store,st_name=['InternalStimulus'],st_direct_stimulation_name=None)    
     OverviewPlot(dsv,ParameterSet({'sheet_name' : 'V1_Exc_L4', 'neuron' : analog_ids[0], 'sheet_activity' : {}, 'spontaneous' : True}),fig_param={'dpi' : 100,'figsize': (28,12)},plot_file_name='SSExcAnalogL4.png').plot()
     OverviewPlot(dsv,ParameterSet({'sheet_name' : 'V1_Inh_L4', 'neuron' : analog_ids_inh[0], 'sheet_activity' : {}, 'spontaneous' : True}),fig_param={'dpi' : 100,'figsize': (28,12)},plot_file_name='SSInhAnalogL4.png').plot()    
             
-    RasterPlot(dsv,ParameterSet({'sheet_name' : 'V1_Exc_L4', 'neurons' : spike_ids,'trial_averaged_histogram': False, 'spontaneous' : False}),fig_param={'dpi' : 100,'figsize': (28,12)},plot_file_name='SSExcRasterL4.png').plot({'SpikeRasterPlot.group_trials':True})
-    RasterPlot(dsv,ParameterSet({'sheet_name' : 'V1_Inh_L4', 'neurons' : spike_ids_inh,'trial_averaged_histogram': False, 'spontaneous' : False}),fig_param={'dpi' : 100,'figsize': (28,12)},plot_file_name='SSInhRasterL4.png').plot({'SpikeRasterPlot.group_trials':True})
 
     if l23_flag:
         dsv = param_filter_query(data_store,st_name=['InternalStimulus'],st_direct_stimulation_name=None)    
@@ -1047,15 +1052,14 @@ def perform_analysis_and_visualization_spont(data_store):
         RasterPlot(dsv,ParameterSet({'sheet_name' : 'V1_Exc_L2/3', 'neurons' : spike_ids23,'trial_averaged_histogram': False, 'spontaneous' : False}),fig_param={'dpi' : 100,'figsize': (28,12)},plot_file_name='SSExcRasterL23.png').plot({'SpikeRasterPlot.group_trials':True})
         RasterPlot(dsv,ParameterSet({'sheet_name' : 'V1_Inh_L2/3', 'neurons' : spike_ids_inh23,'trial_averaged_histogram': False, 'spontaneous' : False}),fig_param={'dpi' : 100,'figsize': (28,12)},plot_file_name='SSInhRasterL23.png').plot({'SpikeRasterPlot.group_trials':True})
     
-    #SpontStatisticsOverview(data_store,ParameterSet({}), fig_param={'dpi' : 200,'figsize': (15,10)},plot_file_name='SpontStatisticsOverview.png').plot()
     
     if l23_flag:
         SpontActOverview(data_store,ParameterSet({'l4_exc_neuron' : analog_ids[0], 'l4_inh_neuron' : analog_ids_inh[0],'l23_exc_neuron' : analog_ids23[0],'l23_inh_neuron' : analog_ids_inh23[0]}),plot_file_name='SpontActOverview.png', fig_param={'dpi' : 200,'figsize': (15,12)}).plot()
         SpontStatisticsOverview(data_store,ParameterSet({}), fig_param={'dpi' : 200,'figsize': (15,10)},plot_file_name='SpontStatisticsOverview.png').plot()
     else:
         SpontActOverview(data_store,ParameterSet({'l4_exc_neuron' : analog_ids[0], 'l4_inh_neuron' : analog_ids_inh[0],'l23_exc_neuron' : -1,'l23_inh_neuron' : -1}),plot_file_name='SpontActOverview.png', fig_param={'dpi' : 200,'figsize': (15,12)}).plot()
-	SpontStatisticsOverview(data_store,ParameterSet({}), fig_param={'dpi' : 200,'figsize': (15,10)},plot_file_name='SpontStatisticsOverview.png').plot()
-    
+    SpontStatisticsOverview(data_store,ParameterSet({}), fig_param={'dpi' : 200,'figsize': (15,10)},plot_file_name='SpontStatisticsOverview.png').plot()
+
 
 
 def perform_analysis_and_visualization_or_small(data_store):

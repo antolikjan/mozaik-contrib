@@ -36,7 +36,7 @@
             'duration': 100.0,
         },
         'gain_control' : {
-            'gain': 50,
+            'gain': 7,
             'non_linear_gain' : {
                         'luminance_gain' : 10.0,
                         'luminance_scaler' : 0.1,
@@ -64,7 +64,7 @@
         
         'noise': {
             'mean': 0.0,
-            'stdev': 2.7, #nA
+            'stdev': 3.3, #nA
         }
     }
 }
