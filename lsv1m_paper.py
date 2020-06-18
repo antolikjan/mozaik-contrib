@@ -2230,6 +2230,8 @@ class SizeTuningOverviewNew(Plotting):
         pylab.xlabel('SI (high-contrast)',fontsize=fontsize)
         pylab.ylabel('SI (low-contrast)',fontsize=fontsize)
 
+        return {}
+
         
 class TrialToTrialVariabilityComparisonNew(Plotting):
     """
