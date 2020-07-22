@@ -2050,7 +2050,7 @@ class SizeTuningOverviewNew(Plotting):
           pylab.ylabel('conductance (nS)',fontsize=fontsize)
 
         nice_neuron_l4 = self.parameters.l4_neurons_analog[0]#25432
-        not_nice_neuron_l4 = self.parameters.l4_neurons_analog[1]#34816
+        not_nice_neuron_l4 = self.parameters.l4_neurons_analog[0]#34816
         nice_neuron_l23 = self.parameters.l23_neurons_analog[0]#60674
 
         example_neuron(nice_neuron_l4,0,'V1_Exc_L4')  
