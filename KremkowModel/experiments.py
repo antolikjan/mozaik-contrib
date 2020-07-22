@@ -41,3 +41,8 @@ def create_experiments(model):
                            #                                                                 'contrast' : 100),
                         ]
 
+def create_experiments_spont(model):
+    return              [
+                           #Spontaneous Activity 
+                           NoStimulation(model,ParameterSet({'duration' : 10*147*7})),
+			]

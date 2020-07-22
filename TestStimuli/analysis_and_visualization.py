@@ -10,7 +10,6 @@ from mozaik.storage.datastore import PickledDataStore
 from mozaik.tools.circ_stat import circular_dist
 import sys
 sys.path.append('/home/jan/projects/mozaik/contrib')
-from Kremkow_plots import *
 
 def perform_analysis_and_visualization(data_store):
 
