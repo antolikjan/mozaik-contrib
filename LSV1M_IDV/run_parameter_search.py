@@ -1,11 +1,21 @@
 # -*- coding: utf-8 -*-
 import sys
-from mozaik.meta_workflow.parameter_search import CombinationParameterSearch,SlurmSequentialBackendIoV
+from mozaik.meta_workflow.parameter_search import CombinationParameterSearch,SlurmSequentialBackend
 import numpy
 import time
 
 if True:
-    CombinationParameterSearch(SlurmSequentialBackendIoV(num_threads=1,num_mpi=12),{
+    CombinationParameterSearch(SlurmSequentialBackend(num_threads=1,num_mpi=64),{
+				         'sheets.l4_cortex_exc.K' : [1000],
+#				         'sheets.retina_lgn.params.noise.stdev' : [1.6,1.7],
+				         'sheets.retina_lgn.params.gain_control.gain' : [8,9],
+					 'sheets.l4_cortex_exc.AfferentConnection.base_weight' : [0.0015,0.0014,0.0013,0.0012],
+				         }).run_parameter_search()
+
+
+
+if False:
+    CombinationParameterSearch(SlurmSequentialBackend(num_threads=1,num_mpi=64),{
 				         'sheets.l4_cortex_exc.K' : [1480],
 				         'sheets.l4_cortex_exc.params.sx' : [7000],
 				         'sheets.l4_cortex_exc.params.density' : [600,700],
@@ -17,8 +27,8 @@ if True:
 					 'sheets.l4_cortex_exc.AfferentConnection.base_weight' : [0.0014],
 #				         'sheets.l4_cortex_exc.layer23_aff_ratio' : [0.2],
 #				         'sheets.l4_cortex_exc.AfferentConnection.aspect_ratio' : [0.4],
-				         'sheets.l4_cortex_exc.L4ExcL4InhConnection.base_weight' : [0.0009,0.001],
-				         'sheets.l4_cortex_inh.L4InhL4ExcConnection.base_weight' : [0.0021,0.0022],
+				         'sheets.l4_cortex_exc.L4ExcL4InhConnection.base_weight' : [0.0009],
+				         'sheets.l4_cortex_inh.L4InhL4ExcConnection.base_weight' : [0.0021],
 				         'sheets.l4_cortex_exc.L4ExcL4ExcConnection.short_term_plasticity.tau_rec' : [10],
 				         'sheets.l4_cortex_exc.AfferentConnection.short_term_plasticity.tau_rec' : [150],
 				         'sheets.l4_cortex_inh.L4InhL4ExcConnection.short_term_plasticity.tau_rec' : [15],
