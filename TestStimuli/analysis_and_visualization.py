@@ -13,7 +13,7 @@ sys.path.append('/home/jan/projects/mozaik/contrib')
 
 def perform_analysis_and_visualization(data_store):
 
-    RetinalInputMovie(data_store,ParameterSet({}),plot_file_name="mov",fig_param={'dpi' : 300,'figsize': (20,10)}).plot({'*.title' : None})
+    RetinalInputMovie(data_store,ParameterSet({}),plot_file_name="mov",fig_param={'dpi' : 300,'figsize': (2,1)}).plot({'*.title' : None})
 
     import pylab
     pylab.show()

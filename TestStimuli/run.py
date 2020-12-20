@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
 """
 """
+import matplotlib
+matplotlib.use('Agg')
+
 import sys
 from pyNN import nest
 from mozaik.controller import run_workflow, setup_logging
