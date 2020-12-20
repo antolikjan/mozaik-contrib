@@ -38,7 +38,7 @@ def create_experiments_or(model):
     
     return  [
                            #Spontaneous Activity 
-                           NoStimulation(model,ParameterSet({'duration':2*5*3*8*7})),
+                           NoStimulation(model,ParameterSet({'duration':3*8*2*5*3*8*7})),
                            # Measure orientation tuning with full-filed sinusoidal gratins
                            MeasureOrientationTuningFullfield(model,ParameterSet({'num_orientations':2,'spatial_frequency':0.8,'temporal_frequency':2,'grating_duration':2*143*7,'contrasts':[100,10],'num_trials': 5})),
 	       

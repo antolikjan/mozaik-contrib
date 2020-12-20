@@ -1,15 +1,16 @@
 # -*- coding: utf-8 -*-
 import sys
-from mozaik.meta_workflow.parameter_search import CombinationParameterSearch,SlurmSequentialBackend
+from mozaik.meta_workflow.parameter_search import CombinationParameterSearch,SlurmSequentialBackendUK
 import numpy
 import time
 
 if True:
-    CombinationParameterSearch(SlurmSequentialBackend(num_threads=1,num_mpi=64),{
-				         'sheets.l4_cortex_exc.K' : [1000],
-#				         'sheets.retina_lgn.params.noise.stdev' : [1.6,1.7],
-				         'sheets.retina_lgn.params.gain_control.gain' : [8,9],
-					 'sheets.l4_cortex_exc.AfferentConnection.base_weight' : [0.0015,0.0014,0.0013,0.0012],
+    CombinationParameterSearch(SlurmSequentialBackendUK(num_threads=16,num_mpi=1),{
+				         'trial' : [1,2],
+#				         'sheets.l4_cortex_exc.K' : [1000],
+				         'sheets.retina_lgn.params.noise.stdev' : [1.7],
+				         'sheets.retina_lgn.params.gain_control.gain' : [9],
+#					 'sheets.l4_cortex_exc.AfferentConnection.base_weight' : [0.0015,0.0014,0.0013,0.0012],
 				         }).run_parameter_search()
 
 

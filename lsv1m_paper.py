@@ -1058,9 +1058,12 @@ class OrientationTuningSummaryAnalogSignals(Plotting):
             analog_ids_inh2 = sorted(numpy.random.permutation(queries.param_filter_query(self.datastore,sheet_name=self.parameters.inh_sheet_name2).get_segments()[0].get_stored_esyn_ids()))
             or_tuning_exc2 = self.datastore.get_analysis_result(identifier='PerNeuronValue',value_name = 'LGNAfferentOrientation', sheet_name = self.parameters.exc_sheet_name2)[0]
             or_tuning_inh2 = self.datastore.get_analysis_result(identifier='PerNeuronValue',value_name = 'LGNAfferentOrientation', sheet_name = self.parameters.inh_sheet_name2)[0]
-            
-        
-            
+
+	or_tuning_exc1 = None
+	or_tuning_inh1 = None
+	or_tuning_exc2 = None
+	or_tuning_inh2 = None
+
         
         # L4 EXC
         dsv = queries.param_filter_query(self.datastore,value_name=['-(x+y)(F0_Vm,Mean(VM))'])    

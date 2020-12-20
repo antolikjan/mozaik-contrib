@@ -19,6 +19,7 @@ class SelfSustainedPushPull(Model):
         'only_afferent' : bool,
         'l23' : bool,
 	'feedback' : bool,
+        'trial' : int,
     })
     
     def __init__(self, sim, num_threads, parameters):
