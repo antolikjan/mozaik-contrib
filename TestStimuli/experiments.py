@@ -73,9 +73,9 @@ def create_experiments(model):
                             #                                        })),
 
                             MeasureSparse(model,ParameterSet({
-                                   'time_per_image': 210, 
+                                   'time_per_image': 42, 
                                    'stim_size' : 5,
-                                   'total_number_of_images' : 5, 
+                                   'total_number_of_images' : 50, 
                                    'num_trials' : 1,
                                    'experiment_seed' : 13,
                                    'grid_size' : 10,
