@@ -56,21 +56,32 @@ def create_experiments(model):
 			    #					    'gap_lengths' : [0.3,0.6]
                             #                                        })),
 
-                    	    MapResponseToInterruptedCornerStimulus(model,ParameterSet({
-                                                                    'x' : 0,
-                                                                    'y' : 0,
-                                                                    'length' : 1/0.8/2.0 * 12.0,
-                                                                    'width' :  1/0.8/4.0,
-                                                                    'orientation' : 0,
-                                                                    'max_offset' : 1/0.8/2.0 * 1.5,
-                                                                    'steps' : 1,
-                                                                    'duration' : 1000,
-                                                                    'flash_duration' : 500, 
-                                                                    'relative_luminances' : [1.0],
-                                                                    'num_trials' : 1,
-								    'gap_length' : 0.3,
-								    'angles' : [numpy.pi/4]
-                                                                    })),
+                    	    #MapResponseToInterruptedCornerStimulus(model,ParameterSet({
+                            #                                        'x' : 0,
+                            #                                        'y' : 0,
+                            #                                        'length' : 1/0.8/2.0 * 12.0,
+                            #                                        'width' :  1/0.8/4.0,
+                            #                                        'orientation' : 0,
+                            #                                        'max_offset' : 1/0.8/2.0 * 1.5,
+                            #                                        'steps' : 1,
+                            #                                        'duration' : 1000,
+                            #                                        'flash_duration' : 500, 
+                            #                                        'relative_luminances' : [1.0],
+                            #                                        'num_trials' : 1,
+			    #                                        'gap_length' : 0.3,
+			    #                                        'angles' : [numpy.pi/4]
+                            #                                        })),
+
+                            MeasureSparse(model,ParameterSet({
+                                   'time_per_image': 210, 
+                                   'stim_size' : 5,
+                                   'total_number_of_images' : 5, 
+                                   'num_trials' : 1,
+                                   'experiment_seed' : 13,
+                                   'grid_size' : 10,
+                                   'stim_size' : 5.5,
+                                   'grid' : True
+                            })),
 
             
                         ]

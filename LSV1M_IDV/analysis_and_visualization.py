@@ -1094,7 +1094,7 @@ def perform_analysis_and_visualization_or_small(data_store):
         l23_exc_or_many_analog = numpy.array(analog_ids23)[numpy.nonzero(numpy.array([circular_dist(l23_exc_or.get_value_by_id(i),0,numpy.pi)  for i in analog_ids23]) < 0.1)[0]]
         l23_exc_or_many_analog_inh = numpy.array(analog_ids_inh23)[numpy.nonzero(numpy.array([circular_dist(l23_inh_or.get_value_by_id(i),0,numpy.pi)  for i in analog_ids_inh23]) < 0.1)[0]]
 
-    if False:
+    if True:
         if l23:
            analysis(data_store,l4_exc_or_many_analog,l4_exc_or_many_analog_inh,l23_exc_or_many_analog,l23_exc_or_many_analog_inh)
         else:

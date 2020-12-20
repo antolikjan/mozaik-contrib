@@ -11,6 +11,8 @@ from mozaik.storage.datastore import Hdf5DataStore,PickledDataStore
 from analysis_and_visualization import perform_analysis_and_visualization
 from parameters import ParameterSet
 
+import matplotlib
+matplotlib.verbose.set_level("helpful")
 
 try:
     from mpi4py import MPI
