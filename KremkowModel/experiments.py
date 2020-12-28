@@ -48,16 +48,16 @@ def create_experiments_spont(model):
 			]
 
 def create_experiments_RF_estimation(model):
-			[
+     return			[
                            #Spontaneous Activity 
                            NoStimulation(model,ParameterSet({'duration' : 10*147*7})),
 
                            #RF estimation
                            MeasureSparse(model,ParameterSet({
-                                   'time_per_image': 42, 
+                                   'time_per_image': 126, 
                                    'stim_size' : 3.125,
-                                   'total_number_of_images' : 100,
-                                   'num_trials' : 10,
+                                   'total_number_of_images' : 1000,
+                                   'num_trials' : 1,
                                    'experiment_seed' : 13,
                                    'grid_size' : 10,
                                    'stim_size' : 5.5,
