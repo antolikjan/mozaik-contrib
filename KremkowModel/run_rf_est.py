@@ -29,8 +29,6 @@ print sys.path
 
 
 
-
-
 logger = mozaik.getMozaikLogger()
 
 if True:
@@ -39,10 +37,10 @@ if True:
     #model.connectors['V1L4ExcL4InhConnection'].store_connections(data_store)    
     #model.connectors['V1L4InhL4ExcConnection'].store_connections(data_store)    
     #model.connectors['V1L4InhL4InhConnection'].store_connections(data_store)    
-    model.connectors['V1AffConnectionOn'].store_connections(data_store)    
-    model.connectors['V1AffConnectionOff'].store_connections(data_store)    
-    model.connectors['V1AffInhConnectionOn'].store_connections(data_store)    
-    model.connectors['V1AffInhConnectionOff'].store_connections(data_store)    
+    #model.connectors['V1AffConnectionOn'].store_connections(data_store)    
+    #model.connectors['V1AffConnectionOff'].store_connections(data_store)    
+    #model.connectors['V1AffInhConnectionOn'].store_connections(data_store)    
+    #model.connectors['V1AffInhConnectionOff'].store_connections(data_store)    
     data_store.save()
     from analysis_and_visualization import perform_analysis_and_visualization_spont
     perform_analysis_and_visualization_spont(data_store)
