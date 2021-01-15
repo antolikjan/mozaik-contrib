@@ -47,20 +47,141 @@ def create_experiments_spont(model):
                            NoStimulation(model,ParameterSet({'duration' : 10*147*7})),
 			]
 
-def create_experiments_RF_estimation(model):
+def create_experiments_RF_estimation1(model):
      return			[
                            #Spontaneous Activity 
-                           NoStimulation(model,ParameterSet({'duration' : 10*147*7})),
+                           NoStimulation(model,ParameterSet({'duration' : 3*147*7})),
 
-                           #RF estimation
-                           MeasureSparse(model,ParameterSet({
-                                   'time_per_image': 126, 
-                                   'stim_size' : 3.125,
+                           #RF estimation with current injection
+                           MeasureSparseWithCurrentInjection(model,ParameterSet({
+                                   'time_per_image':70, 
+                                   'stim_size' : 4.8,
                                    'total_number_of_images' : 1000,
                                    'num_trials' : 1,
                                    'experiment_seed' : 13,
-                                   'grid_size' : 10,
-                                   'stim_size' : 5.5,
+                                   'grid_size' : 8,
+                                   'grid' : True,
+                                   'stimulation_sheet' : 'V1_Exc_L4',
+                                   'stimulation_current' : -1,
+                                   'stimulation_configuration' : {
+                                           'component' :  'mozaik.sheets.population_selector.RCGrid',
+                                           'params' :  {
+                                                         'size' : 1000,
+                                                         'spacing' : 200,
+                                                         'offset_x' : 0,
+                                                         'offset_y' : 0
+                                                        }
+                                         } 
+                            })),
+
+
+                           #RF estimation with current injection
+                           MeasureSparseWithCurrentInjection(model,ParameterSet({
+                                   'time_per_image':70, 
+                                   'stim_size' : 4.8,
+                                   'total_number_of_images' : 1000,
+                                   'num_trials' : 1,
+                                   'experiment_seed' : 13,
+                                   'grid_size' : 8,
+                                   'grid' : True,
+                                   'stimulation_sheet' : 'V1_Exc_L4',
+                                   'stimulation_current' : -0.4,
+                                   'stimulation_configuration' : {
+                                           'component' :  'mozaik.sheets.population_selector.RCGrid',
+                                           'params' :  {
+                                                         'size' : 1000,
+                                                         'spacing' : 200,
+                                                         'offset_x' : 0,
+                                                         'offset_y' : 0
+                                                        }
+                                         } 
+                            })),
+
+                           #RF estimation with current injection
+                           MeasureSparseWithCurrentInjection(model,ParameterSet({
+                                   'time_per_image':70, 
+                                   'stim_size' : 4.8,
+                                   'total_number_of_images' : 1000,
+                                   'num_trials' : 1,
+                                   'experiment_seed' : 13,
+                                   'grid_size' : 8,
+                                   'grid' : True,
+                                   'stimulation_sheet' : 'V1_Exc_L4',
+                                   'stimulation_current' : 0.4,
+                                   'stimulation_configuration' : {
+                                           'component' :  'mozaik.sheets.population_selector.RCGrid',
+                                           'params' :  {
+                                                         'size' : 1000,
+                                                         'spacing' : 200,
+                                                         'offset_x' : 0,
+                                                         'offset_y' : 0
+                                                        }
+                                         } 
+                            })),
+
+
+                           #RF estimation
+                           MeasureSparse(model,ParameterSet({
+                                   'time_per_image':70, 
+                                   'stim_size' : 4.8,
+                                   'total_number_of_images' : 1000,
+                                   'num_trials' : 1,
+                                   'experiment_seed' : 13,
+                                   'grid_size' : 8,
                                    'grid' : True
-                            }))
+                            })),
+
+                           #RF estimation
+                           MeasureSparse(model,ParameterSet({
+                                   'time_per_image':70, 
+                                   'stim_size' : 4.8,
+                                   'total_number_of_images' : 3000,
+                                   'num_trials' : 1,
+                                   'experiment_seed' : 17,
+                                   'grid_size' : 8,
+                                   'grid' : True
+                            })),
+
 			]
+
+
+def create_experiments_RF_estimation(model):
+     return			[
+                           #Spontaneous Activity 
+                           NoStimulation(model,ParameterSet({'duration' : 3*147*7})),
+
+                           #RF estimation with current injection
+                           MeasureSparseWithCurrentInjection(model,ParameterSet({
+                                   'time_per_image':70, 
+                                   'stim_size' : 4.8,
+                                   'total_number_of_images' : 1000,
+                                   'num_trials' : 1,
+                                   'experiment_seed' : 13,
+                                   'grid_size' : 8,
+                                   'grid' : True,
+                                   'stimulation_sheet' : 'V1_Exc_L4',
+                                   'stimulation_current' : -1,
+                                   'stimulation_configuration' : {
+                                           'component' :  'mozaik.sheets.population_selector.RCGrid',
+                                           'params' :  {
+                                                         'size' : 1000,
+                                                         'spacing' : 200,
+                                                         'offset_x' : 0,
+                                                         'offset_y' : 0
+                                                        }
+                                         } 
+                            })),
+
+
+                           #RF estimation
+                           MeasureSparse(model,ParameterSet({
+                                   'time_per_image':70, 
+                                   'stim_size' : 4.8,
+                                   'total_number_of_images' : 1000,
+                                   'num_trials' : 1,
+                                   'experiment_seed' : 13,
+                                   'grid_size' : 8,
+                                   'grid' : True
+                            })),
+
+                ]

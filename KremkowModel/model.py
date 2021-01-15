@@ -9,8 +9,6 @@ from mozaik.connectors.modular import ModularSamplingProbabilisticConnector
 from mozaik import load_component
 from mozaik.space import VisualRegion
 
-logger = mozaik.getMozaikLogger()
-
 class PushPullCCModel(Model):
     """
     This model is a re-implementation of a model by Jens Kremkow presented in following paper:

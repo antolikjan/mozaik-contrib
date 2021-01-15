@@ -12,36 +12,38 @@ from mozaik.controller import run_workflow, setup_logging
 import mozaik
 from experiments import create_experiments_conn
 from model import SelfSustainedPushPull
-from mozaik.storage.datastore import Hdf5DataStore,PickledDataStore
+from mozaik.storage.datastore import Hdf5DataStore, PickledDataStore
 from analysis_and_visualization import perform_analysis_and_visualization_conn
 from parameters import ParameterSet
 
-from mpi4py import MPI 
+from mpi4py import MPI
 mpi_comm = MPI.COMM_WORLD
 
 
 if True:
-    data_store,model = run_workflow('SelfSustainedPushPull',SelfSustainedPushPull,create_experiments_conn)
-    model.connectors['V1AffConnectionOn'].store_connections(data_store)    
-    model.connectors['V1AffConnectionOff'].store_connections(data_store)    
-    model.connectors['V1AffInhConnectionOn'].store_connections(data_store)    
-    model.connectors['V1AffInhConnectionOff'].store_connections(data_store)    
-    model.connectors['V1L4ExcL4ExcConnection'].store_connections(data_store)    
-    model.connectors['V1L4ExcL4InhConnection'].store_connections(data_store)    
-    model.connectors['V1L4InhL4ExcConnection'].store_connections(data_store)    
-    model.connectors['V1L4InhL4InhConnection'].store_connections(data_store)    
-    model.connectors['V1L23ExcL23ExcConnection'].store_connections(data_store)    
-    model.connectors['V1L23ExcL23InhConnection'].store_connections(data_store)    
-    model.connectors['V1L23InhL23ExcConnection'].store_connections(data_store)    
-    model.connectors['V1L23InhL23InhConnection'].store_connections(data_store)    
-    model.connectors['V1L4ExcL23ExcConnection'].store_connections(data_store)    
-    model.connectors['V1L4ExcL23InhConnection'].store_connections(data_store)    
-    data_store.save() 
-else: 
+    data_store, model = run_workflow(
+        'SelfSustainedPushPull', SelfSustainedPushPull, create_experiments_conn)
+    model.connectors['V1AffConnectionOn'].store_connections(data_store)
+    model.connectors['V1AffConnectionOff'].store_connections(data_store)
+    model.connectors['V1AffInhConnectionOn'].store_connections(data_store)
+    model.connectors['V1AffInhConnectionOff'].store_connections(data_store)
+    model.connectors['V1L4ExcL4ExcConnection'].store_connections(data_store)
+    model.connectors['V1L4ExcL4InhConnection'].store_connections(data_store)
+    model.connectors['V1L4InhL4ExcConnection'].store_connections(data_store)
+    model.connectors['V1L4InhL4InhConnection'].store_connections(data_store)
+    model.connectors['V1L23ExcL23ExcConnection'].store_connections(data_store)
+    model.connectors['V1L23ExcL23InhConnection'].store_connections(data_store)
+    model.connectors['V1L23InhL23ExcConnection'].store_connections(data_store)
+    model.connectors['V1L23InhL23InhConnection'].store_connections(data_store)
+    model.connectors['V1L4ExcL23ExcConnection'].store_connections(data_store)
+    model.connectors['V1L4ExcL23InhConnection'].store_connections(data_store)
+    data_store.save()
+else:
     setup_logging()
-    data_store = PickledDataStore(load=True,parameters=ParameterSet({'root_directory':'SelfSustainedPushPull_BIG_OR____','store_stimuli' : False}),replace=True)
+    data_store = PickledDataStore(load=True, parameters=ParameterSet(
+        {'root_directory': 'SelfSustainedPushPull_BIG_OR____', 'store_stimuli': False}), replace=True)
 
 if mpi_comm.rank == 0:
-   print "Starting visualization" 
-   perform_analysis_and_visualization_conn(data_store)
-#   data_store.save() 
+    print "Starting visualization"
+    perform_analysis_and_visualization_conn(data_store)
+#   data_store.save()
