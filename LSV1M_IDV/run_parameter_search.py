@@ -1,20 +1,27 @@
 # -*- coding: utf-8 -*-
 import sys
-from mozaik.meta_workflow.parameter_search import CombinationParameterSearch, SlurmSequentialBackendUK
+from mozaik.meta_workflow.parameter_search import CombinationParameterSearch,SlurmSequentialBackend
 import numpy
 import time
 
+slurm_options = ['-J MozaikParamSearchAnalysis']
 
 if True:
-    CombinationParameterSearch(SlurmSequentialBackendUK(num_threads=16, num_mpi=1), {
-        #'sheets.l4_cortex_exc.K' : [1000],
-        'pynn_seed': [13],
-        'sheets.retina_lgn.params.noise.stdev': [1.7],
-        'sheets.retina_lgn.params.gain_control.gain': [12],
-        'sheets.retina_lgn.params.gain_control.non_linear_gain.luminance_gain': [5],
-        'sheets.l4_cortex_inh.L4InhL4ExcConnection.base_weight': [0.0023],
-        #'sheets.l4_cortex_exc.AfferentConnection.base_weight' : [0.0015,0.0014,0.0013,0.0012],
-    }).run_parameter_search()
+    CombinationParameterSearch(
+        SlurmSequentialBackend(
+        num_threads=16, num_mpi=1, 
+        path_to_mozaik_env='/home/berling/virt_env/mozaik_nest2-20-1_march_native/bin/activate', 
+        slurm_options=slurm_options), 
+        {
+            #'sheets.l4_cortex_exc.K' : [1000],
+            'pynn_seed': [13],
+            'sheets.retina_lgn.params.noise.stdev': [1.7],
+            'sheets.retina_lgn.params.gain_control.gain': [12],
+            'sheets.retina_lgn.params.gain_control.non_linear_gain.luminance_gain': [5],
+            'sheets.l4_cortex_inh.L4InhL4ExcConnection.base_weight': [0.0023],
+            #'sheets.l4_cortex_exc.AfferentConnection.base_weight' : [0.0015,0.0014,0.0013,0.0012],
+        }
+    ).run_parameter_search()
 
 
 if False:
