@@ -1613,13 +1613,13 @@ class TrialCrossCorrelationAnalysis(Plotting):
         a = 0.6
 
         p0, p1, p2, p3 = self._fitgaussian(numpy.linspace(-z, z, z+1), psth_cc_gr_s1[int(
-            len(psth_cc_gr_s1)/2)-z/2:int(len(psth_cc_gr_s1)/2)+z/2+1])
+            len(psth_cc_gr_s1)/2)-int(z/2):int(len(psth_cc_gr_s1)/2)+int(z/2)+1])
         p0, p1, p2, p3 = self._fitgaussian(numpy.linspace(-z, z, z+1), psth_cc_ni_s1[int(
-            len(psth_cc_ni_s1)/2)-z/2:int(len(psth_cc_ni_s1)/2)+z/2+1])
+            len(psth_cc_ni_s1)/2)-int(z/2):int(len(psth_cc_ni_s1)/2)+int(z/2)+1])
         p0, p1, p2, p3 = self._fitgaussian(numpy.linspace(-z, z, z+1), psth_cc_gr_s2[int(
-            len(psth_cc_gr_s2)/2)-z/2:int(len(psth_cc_gr_s2)/2)+z/2+1])
+            len(psth_cc_gr_s2)/2)-int(z/2):int(len(psth_cc_gr_s2)/2)+int(z/2)+1])
         p0, p1, p2, p3 = self._fitgaussian(numpy.linspace(-z, z, z+1), psth_cc_ni_s2[int(
-            len(psth_cc_ni_s2)/2)-z/2:int(len(psth_cc_ni_s2)/2)+z/2+1])
+            len(psth_cc_ni_s2)/2)-int(z/2):int(len(psth_cc_ni_s2)/2)+int(z/2)+1])
 
         p0, p1, p2, p3 = self._fitgaussian(
             numpy.linspace(-z, z, 2*z+1), vm_cc_gr_s1[int(len(vm_cc_gr_s1)/2)-z:int(len(vm_cc_gr_s1)/2)+z+1])
@@ -1630,15 +1630,15 @@ class TrialCrossCorrelationAnalysis(Plotting):
         p0, p1, p2, p3 = self._fitgaussian(
             numpy.linspace(-z, z, 2*z+1), vm_cc_ni_s2[int(len(vm_cc_ni_s2)/2)-z:int(len(vm_cc_ni_s2)/2)+z+1])
 
-        plots["Spike_sheet_1"] = (StandardStyleLinePlot([numpy.linspace(-z, z, z+1), numpy.linspace(-z, z, z+1)], [psth_cc_gr_s1[int(len(psth_cc_gr_s1)/2)-z/2:int(len(psth_cc_gr_s1)/2)+z/2+1], psth_cc_ni_s1[int(len(psth_cc_ni_s1)/2)-z/2:int(len(
-            psth_cc_ni_s1)/2)+z/2+1]]), gs[0, 0], {'colors': ['r', 'k'], 'x_tick_style': 'Custom', 'x_ticks': [], 'y_tick_style': 'Custom', 'y_ticks': [0, 0.2], 'y_tick_labels': [0.0, 0.2], 'linewidth': 2.0, 'y_lim': (-0.02, 0.2), 'y_label': 'spikes'})
+        plots["Spike_sheet_1"] = (StandardStyleLinePlot([numpy.linspace(-z, z, z+1), numpy.linspace(-z, z, z+1)], [psth_cc_gr_s1[int(len(psth_cc_gr_s1)/2)-int(z/2):int(len(psth_cc_gr_s1)/2)+int(z/2)+1], psth_cc_ni_s1[int(len(psth_cc_ni_s1)/2)-int(z/2):int(len(
+            psth_cc_ni_s1)/2)+int(z/2+1)]]), gs[0, 0], {'colors': ['r', 'k'], 'x_tick_style': 'Custom', 'x_ticks': [], 'y_tick_style': 'Custom', 'y_ticks': [0, 0.2], 'y_tick_labels': [0.0, 0.2], 'linewidth': 2.0, 'y_lim': (-0.02, 0.2), 'y_label': 'spikes'})
         plots["Vm_sheet_1"] = (StandardStyleLinePlot([numpy.linspace(-z, z, 2*z+1), numpy.linspace(-z, z, 2*z+1)], [vm_cc_gr_s1[int(len(vm_cc_gr_s1)/2)-z:int(len(vm_cc_gr_s1)/2)+z+1], vm_cc_ni_s1[int(len(vm_cc_ni_s1)/2)-z:int(len(vm_cc_ni_s1)/2)+z+1]]), gs[1, 0], {'x_label': 'time(ms)', 'colors': [
                                'r', 'k'], 'x_tick_style': 'Custom', 'x_ticks': [-z, 0, z], 'x_tick_labels': [-self.parameters.window_length, 0, self.parameters.window_length], 'y_tick_style': 'Custom', 'y_ticks': [-a, 0, a], 'y_tick_labels': [-a, 0.0, a], 'linewidth': 2.0, 'y_lim': (-a, a), 'y_label': 'Vm'})
-        plots["Spike_sheet_2"] = (StandardStyleLinePlot([numpy.linspace(-z, z, z+1), numpy.linspace(-z, z, z+1)], [psth_cc_gr_s2[int(len(psth_cc_gr_s2)/2)-z/2:int(len(psth_cc_gr_s2)/2)+z/2+1], psth_cc_ni_s2[int(len(psth_cc_ni_s2)/2)-z/2:int(len(psth_cc_ni_s2)/2)+z/2+1]]),
+        plots["Spike_sheet_2"] = (StandardStyleLinePlot([numpy.linspace(-z, z, z+1), numpy.linspace(-z, z, z+1)], [psth_cc_gr_s2[int(len(psth_cc_gr_s2)/2)-int(z/2):int(len(psth_cc_gr_s2)/2)+int(z/2)+1], psth_cc_ni_s2[int(len(psth_cc_ni_s2)/2)-int(z/2):int(len(psth_cc_ni_s2)/2)+int(z/2+1)]]),
                                   gs[0, 1], {'colors': ['r', 'k'], 'x_tick_style': 'Custom', 'x_ticks': [], 'y_tick_style': 'Custom', 'y_ticks': [0, 0.2], 'y_tick_labels': [0.0, 0.2], 'linewidth': 2.0, 'y_lim': (-0.02, 0.2), 'y_label': 'spikes', 'y_ticks': None, 'y_label': None})
         plots["Vm_sheet_2"] = (StandardStyleLinePlot([numpy.linspace(-z, z, 2*z+1), numpy.linspace(-z, z, 2*z+1)], [vm_cc_gr_s2[int(len(vm_cc_gr_s2)/2)-z:int(len(vm_cc_gr_s2)/2)+z+1], vm_cc_ni_s2[int(len(vm_cc_ni_s2)/2)-z:int(len(vm_cc_ni_s2)/2)+z+1]]), gs[1, 1], {'x_label': 'time(ms)', 'colors': [
                                'r', 'k'], 'x_tick_style': 'Custom', 'x_ticks': [-z, 0, z], 'x_tick_labels': [-self.parameters.window_length, 0, self.parameters.window_length], 'y_tick_style': 'Custom', 'y_ticks': [-a, 0, a], 'y_tick_labels': [-a, 0.0, a], 'linewidth': 2.0, 'y_lim': (-a, a), 'y_label': 'Vm', 'y_ticks': None, 'y_label': None})
-        plots["Spike_sheet_pool"] = (StandardStyleLinePlot([numpy.linspace(-z, z, z+1), numpy.linspace(-z, z, z+1)], [psth_cc_gr_pool[int(len(psth_cc_gr_pool)/2)-z/2:int(len(psth_cc_gr_pool)/2)+z/2+1], psth_cc_ni_pool[int(len(psth_cc_ni_pool)/2)-z/2:int(len(psth_cc_ni_pool)/2)+z/2+1]]),
+        plots["Spike_sheet_pool"] = (StandardStyleLinePlot([numpy.linspace(-z, z, z+1), numpy.linspace(-z, z, z+1)], [psth_cc_gr_pool[int(len(psth_cc_gr_pool)/2)-int(z/2):int(len(psth_cc_gr_pool)/2)+int(z/2)+1], psth_cc_ni_pool[int(len(psth_cc_ni_pool)/2)-int(z/2):int(len(psth_cc_ni_pool)/2)+int(z/2)+1]]),
                                      gs[0, 2], {'colors': ['r', 'k'], 'x_tick_style': 'Custom', 'x_ticks': [], 'y_tick_style': 'Custom', 'y_ticks': [0.0, 0.2], 'y_tick_labels': [0.0, 0.2], 'linewidth': 2.0, 'y_lim': (-0.02, 0.2), 'y_label': 'spikes', 'y_ticks': None, 'y_label': None})
         plots["Vm_sheet_pool"] = (StandardStyleLinePlot([numpy.linspace(-z, z, 2*z+1), numpy.linspace(-z, z, 2*z+1)], [vm_cc_gr_pool[int(len(vm_cc_gr_pool)/2)-z:int(len(vm_cc_gr_pool)/2)+z+1], vm_cc_ni_pool[int(len(vm_cc_ni_pool)/2)-z:int(len(vm_cc_ni_pool)/2)+z+1]]), gs[1, 2], {'x_label': 'time(ms)', 'colors': [
                                   'r', 'k'], 'x_tick_style': 'Custom', 'x_ticks': [-z, 0, z], 'x_tick_labels': [-self.parameters.window_length, 0, self.parameters.window_length], 'y_tick_style': 'Custom', 'y_ticks': [-a, 0, a], 'y_tick_labels': [-a, 0.0, a], 'linewidth': 2.0, 'y_lim': (-a, a), 'y_label': 'Vm', 'y_ticks': None, 'y_label': None})
