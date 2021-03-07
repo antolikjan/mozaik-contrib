@@ -19,7 +19,7 @@ logger = mozaik.getMozaikLogger()
 process = psutil.Process(os.getpid())
 
 
-low_contrast = 30
+low_contrast = 10
 
 
 def memory_usage_psutil():
