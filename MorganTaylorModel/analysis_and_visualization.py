@@ -8,9 +8,9 @@ from mozaik.storage.datastore import PickledDataStore
 from mozaik.controller import Global
 
 import sys
-sys.path.append('/home/jantolik/projects/mozaik/contrib')
-import Kremkow_plots
-from Kremkow_plots import *
+sys.path.append('/home/antolikjan/projects/mozaik/contrib')
+#import Kremkow_plots
+#from Kremkow_plots import *
 from lsv1m_paper import *
 
 
@@ -363,3 +363,311 @@ def perform_analysis_and_visualization(data_store,gratings,bars,nat_movies=False
     SpontActOverview(data_store,ParameterSet({'l4_exc_neuron' : analog_ids[0], 'l4_inh_neuron' : analog_ids_inh[0],'l23_exc_neuron' : -1,'l23_inh_neuron' : -1}),plot_file_name='SpontActOverview.png', fig_param={'dpi' : 200,'figsize': (18,14.5)}).plot()
     SpontStatisticsOverview(data_store,ParameterSet({}), fig_param={'dpi' : 200,'figsize': (18,12)},plot_file_name='SpontStatisticsOverview.png').plot()
 
+
+
+def HirschFigure(data_store,):
+
+
+    NeuronAnnotationsToPerNeuronValues(data_store,ParameterSet({})).analyse()
+    analog_ids = param_filter_query(data_store,sheet_name="V1_Exc_L4").get_segments()[0].get_stored_esyn_ids()
+    analog_ids_inh = param_filter_query(data_store,sheet_name="V1_Inh_L4").get_segments()[0].get_stored_esyn_ids()
+
+    class ExportStimulusResponseData(Analysis):
+          """
+          This analysis exports paired stimulus vs response data. Its intended use is to generate input to
+          ML models for identification of stimulus-response function. 
+
+          If signal_type= Vm or cond_Eor cond_I, corresponding recorded signal will be exported.
+          If signal_type=ASL, the analysis assumes a datastore filled with AnalogSignalList data structures of identical parametrization with the exception of stimulus.
+
+          Stimulus-response pairs will be concatenated across all different segments or AnalogSignalList data structures in the data store view. 
+
+          For each semgent or AnalogSignalList of signal length X ms, X/period data pairs (A,B) will be exported, where
+          A is 2D matrix corresponding to the pixels of the stimulus presented during the given period in the visual field 
+          (the stimulus is assumed to be constant during the period). B is the response signal averaged over the given period.
+
+          Following structure will be dumped using the cpickle.dump method into the export file:
+          {
+            "stim" : ndarray,  #contains 3D ndarray of size (X,Y,T), where X,Y are the visual field dimensions, and T corresponds to the number of periods across all the segments or AnalogSignalLists in the provided data store view. 
+            "resp" : ndarray,  #contains 2D ndarray of size (T,N), where T was explained above and N us the number of neurons.      
+          }
+
+
+
+          Other parameters
+          ------------------- 
+          period : float (ms)
+                         The period over which to average the response signal. The stimulus has to be constant over this period of time.
+
+          neurons : list(int)
+                         List of neuron ids for which to export the response
+
+          signal_type : str
+                         Currently understood are [Vm,cond_E,cond_I, ASL]. The first three are the corresponding recorded signals. ASL is any AnalogSignalList deposited in the analysis data store. 
+
+          file_name : str
+                         The name of the file into which data will be stored. The file will be created in the directory containing the datastore. 
+          """    
+          required_parameters = ParameterSet({
+              'period': float,  
+              'neurons' : list,
+              'signal_type' : str,
+              'file_name' : str
+          })      
+
+          def perform_analysis(self):
+                if self.parameters.signal_type == 'ASL':
+                    assert queries.equal_ads(self.datastore,except_params=['stimulus_id'])
+                    assert queries.ads_with_equal_stimulus_type(self.datastore)
+                    # make sure that the length of all stimuli is multiple of frame length
+                    assert all([(MozaikParametrized.idd(s).duration % MozaikParametrized.idd(asl.stimulus_id).frame_duration) == 0 for asl in self.datastore.get_analysis_result()])
+                    frame_duration = MozaikParametrized.idd(self.datastore.get_analysis_result()[0].stimulus_id).frame_duration
+                else:
+                    assert queries.equal_stimulus_type(self.datastore)
+                    # make sure that the length of all stimuli is multiple of frame length
+                    assert all([(MozaikParametrized.idd(s).duration % MozaikParametrized.idd(s).frame_duration) == 0 for s in self.datastore.get_stimuli()])
+                    frame_duration = MozaikParametrized.idd(self.datastore.get_stimuli()[0]).frame_duration
+
+
+                if self.parameters.signal_type == 'ASL':
+                    signals,stims = zip(*[(asl.get_asl_by_id(self.parameters.neurons),self.datastore.get_sensory_stimulus([asl.stimulus_id])[0]) for asl in queries.param_filter_query(self.datastore,identifier='AnalogSignalList').get_analysis_result()])
+                elif self.parameters.signal_type == 'Vm':
+                    signals,stims = zip(*[([seg.get_vm(n) for n in self.parameters.neurons],self.datastore.get_sensory_stimulus([st])[0]) for seg,st in zip(self.datastore.get_segments(),self.datastore.get_stimuli())])
+                elif self.parameters.signal_type == 'cond_E':
+                    signals,stims = zip(*[([seg.get_esyn(n) for n in self.parameters.neurons],self.datastore.get_sensory_stimulus([st])[0]) for seg,st in zip(self.datastore.get_segments(),self.datastore.get_stimuli())])                
+                elif self.parameters.signal_type == 'cond_I':
+                    signals,stims = zip(*[([seg.get_isyn(n) for n in self.parameters.neurons],self.datastore.get_sensory_stimulus([st])[0]) for seg,st in zip(self.datastore.get_segments(),self.datastore.get_stimuli())])
+
+                signals = numpy.array([[numpy.reshape(s.magnitude[1:],(int((s.duration.rescale(qt.ms).magnitude-1)/self.parameters.period),-1)) for s in sig] for sig in signals])            
+                # push neurons into first axes           
+                signals = numpy.swapaxes(signals,0,1)  
+                # concatenate over the different recordings or ASLs if there are multiple
+                signals = [numpy.concatenate(s,axis=0)  for s in signals]  
+                # push neurons last           
+                signals = numpy.swapaxes(signals,0,1)
+                signals = numpy.swapaxes(signals,1,2)  
+                raw_signals = signals.copy()
+                logger.info(numpy.shape(raw_signals))
+                # average over the signal period
+                signals = numpy.mean(signals[:,35:,:],axis=1)
+                logger.info(numpy.shape(signals))
+
+                # concatenate over the different recordings or ASLs
+                stims = numpy.concatenate(stims)  
+                logger.info(numpy.shape(stims))
+
+                #cut up for the indiviudal stimulus presentations of length period
+                sh = numpy.shape(stims)
+                stims = numpy.reshape(stims,(-1,int(self.parameters.period/frame_duration),sh[1],sh[2]))
+                logger.info(numpy.shape(stims))
+
+                # check if the inputs are the same within each period 
+                #for i in xrange(0,int(self.parameters.period/frame_duration)):
+                #    assert numpy.all(stims[:,0,:,:]==stims[:,i,:,:])
+                # remove the same stimuli by averaging over them
+                stims = numpy.mean(stims[:,:2,:],axis=1)
+                logger.info(numpy.shape(stims))
+                return signals,raw_signals,stims
+
+    dsv = param_filter_query(data_store,st_name='SparseNoise',sheet_name='V1_Exc_L4',st_direct_stimulation_name=None)
+    signals,raw_signals,stims = ExportStimulusResponseData(dsv,ParameterSet({'period' : 70, 'neurons' : analog_ids.tolist(), 'signal_type' : "Vm", 'file_name' : "Vm.export"})).perform_analysis()        
+
+    dsv = param_filter_query(data_store,st_name='SparseNoise',sheet_name='V1_Exc_L4',st_direct_stimulation_name='Injection',st_current=0)
+    signals0,raw_signals0,stims0 = ExportStimulusResponseData(dsv,ParameterSet({'period' : 161, 'neurons' : analog_ids.tolist(), 'signal_type' : "Vm", 'file_name' : "Vm.export"})).perform_analysis()
+    signals_e,raw_signals_e,_ = ExportStimulusResponseData(dsv,ParameterSet({'period' : 161, 'neurons' : analog_ids.tolist(), 'signal_type' : "cond_E", 'file_name' : "Vm.export"})).perform_analysis()
+    signals_i,raw_signals_i,_ = ExportStimulusResponseData(dsv,ParameterSet({'period' : 161, 'neurons' : analog_ids.tolist(), 'signal_type' : "cond_I", 'file_name' : "Vm.export"})).perform_analysis()
+
+    dsv = param_filter_query(data_store,st_name='SparseNoise',sheet_name='V1_Exc_L4',st_direct_stimulation_name='Injection',st_current=-0.2)
+    signals1,raw_signals1,stims1 = ExportStimulusResponseData(dsv,ParameterSet({'period' : 161, 'neurons' : analog_ids.tolist(), 'signal_type' : "Vm", 'file_name' : "Vm.export"})).perform_analysis()
+
+    dsv = param_filter_query(data_store,st_name='SparseNoise',sheet_name='V1_Exc_L4',st_direct_stimulation_name='Injection',st_current=0.1)
+    signals01,raw_signals01,stims01 = ExportStimulusResponseData(dsv,ParameterSet({'period' : 161, 'neurons' : analog_ids.tolist(), 'signal_type' : "Vm", 'file_name' : "Vm.export"})).perform_analysis()
+
+    dsv = param_filter_query(data_store,st_name='SparseNoise',sheet_name='V1_Exc_L4',st_direct_stimulation_name='Injection',st_current=-0.1)
+    signalsn02,raw_signalsn02,stimsn02 = ExportStimulusResponseData(dsv,ParameterSet({'period' : 161, 'neurons' : analog_ids.tolist(), 'signal_type' : "Vm", 'file_name' : "Vm.export"})).perform_analysis()
+    
+    # determine spontaneuos activity for each neuron and each current injection level
+    dsv = param_filter_query(data_store,st_name='InternalStimulus')
+    Analog_MeanSTDAndFanoFactor(dsv,ParameterSet({})).analyse()
+
+    dsv = param_filter_query(data_store,st_name='InternalStimulus',sheet_name='V1_Exc_L4',st_direct_stimulation_name='Injection',st_current=0.0,analysis_algorithm='Analog_MeanSTDAndFanoFactor',value_name='Mean(VM)')
+    mean_spont_vm = dsv.get_analysis_result()[0].get_value_by_id(analog_ids)
+
+    dsv = param_filter_query(data_store,st_name='InternalStimulus',sheet_name='V1_Exc_L4',st_direct_stimulation_name='Injection',st_current=-0.2,analysis_algorithm='Analog_MeanSTDAndFanoFactor',value_name='Mean(VM)')
+    mean_spont_vm_hyp2 =  dsv.get_analysis_result()[0].get_value_by_id(analog_ids)
+
+    dsv = param_filter_query(data_store,st_name='InternalStimulus',sheet_name='V1_Exc_L4',st_direct_stimulation_name='Injection',st_current=0.1,analysis_algorithm='Analog_MeanSTDAndFanoFactor',value_name='Mean(VM)')
+    mean_spont_vm_dep =  dsv.get_analysis_result()[0].get_value_by_id(analog_ids)
+
+    dsv = param_filter_query(data_store,st_name='InternalStimulus',sheet_name='V1_Exc_L4',st_direct_stimulation_name='Injection',st_current=-0.1,analysis_algorithm='Analog_MeanSTDAndFanoFactor',value_name='Mean(VM)')
+    mean_spont_vm_hyp1 = dsv.get_analysis_result()[0].get_value_by_id(analog_ids)
+
+    rescaled_stims = (stims-50.0)/50.0
+    pos = rescaled_stims[0]*0
+    neg = rescaled_stims[0]*0
+    for i in xrange(stims.shape[0]):
+        pos += numpy.clip(rescaled_stims[i],a_min=0,a_max=None)
+        neg += numpy.clip(rescaled_stims[i],a_max=0,a_min=None)
+
+    RFs=[]
+    for j in xrange(0,25):
+        apos = rescaled_stims[0]*0
+        aneg = rescaled_stims[0]*0
+        for i in xrange(stims.shape[0]):
+            apos += numpy.clip(rescaled_stims[i],a_min=0,a_max=None)*signals[i,j]
+            aneg += numpy.clip(rescaled_stims[i],a_min=None,a_max=0)*signals[i,j]
+    
+        b = numpy.divide(apos,pos) - numpy.divide(aneg,neg)
+        RFs.append(b)
+
+    RFs=numpy.nan_to_num(RFs)
+
+    def cond(stims,I1,I2,I3,I4,raw_signals_I1,raw_signals_I2,raw_signals_I3,raw_signals_I4,RFs,neuron_indexes,coordsx,coordsy,centerx,centery,excitatory_polarities,raw_signalsE,raw_signalsI):
+        period= 21#70#105
+        blank = 140
+        pylab.figure(figsize=(15,10))
+        pylab.subplots_adjust(wspace=None, hspace=None)
+
+
+        for j in xrange(1,25):
+            pylab.subplot(4,10,j)
+            pylab.imshow(RFs[j-1][25:55,25:55])
+        pylab.savefig("RFs.png")
+
+
+        def RF_contour_plot(RFs,s,sign,cenx,ceny):
+            RF = RFs[cenx-9:cenx+9,ceny-9:ceny+9][numpy.arange(0,18,3),:][:,numpy.arange(0,18,3)]
+            mmin=numpy.min(numpy.array(RFs))
+            mmax=numpy.max(numpy.array(RFs))
+
+            pylab.imshow(RF*0,vmin=-max(-mmin,mmax),vmax=max(-mmin,mmax),cmap='gray')
+            pylab.contour(RF,
+                          levels=[mmin,mmin*0.9,mmin*0.8,mmin*0.7,mmin*0.6,mmin*0.5,mmin*0.4,mmin*0.3,mmin*0.2,mmax*0.2,mmax*0.3,mmax*0.4,mmax*0.5,mmax*0.6,mmax*0.7,mmax*0.8,mmax*0.9,mmax],
+                          colors=[(0.2,0.2,0.2),(0.2,0.2,0.2),(0.2,0.2,0.2),(0.2,0.2,0.2),(0.2,0.2,0.2),(0.2,0.2,0.2),(0.2,0.2,0.2),(0.2,0.2,0.2),(0.8,0.8,0.8),(0.8,0.8,0.8),(0.8,0.8,0.8),(0.8,0.8,0.8),(0.8,0.8,0.8),(0.8,0.8,0.8),(0.8,0.8,0.8),(0.8,0.8,0.8)])
+            pylab.contourf(RF,
+                          levels=[mmin,mmin*0.9,mmin*0.8,mmin*0.7,mmin*0.6,mmin*0.5,mmin*0.4,mmin*0.3,mmin*0.2],
+                          colors=[(0.1,0.1,0.1),(0.14,0.14,0.14),(0.18,0.18,0.18),(0.22,0.22,0.22),(0.26,0.26,0.26),(0.3,0.3,0.3),(0.34,0.34,0.34),(0.38,0.38,0.38)])
+            pylab.contourf(RF,
+                          levels=[mmax*0.2,mmax*0.3,mmax*0.4,mmax*0.5,mmax*0.6,mmax*0.7,mmax*0.8,mmax*0.9,mmax],
+                          colors=[(0.62,0.62,0.62),(0.66,0.66,0.66),(0.7,0.7,0.7),(0.74,0.74,0.74),(0.78,0.78,0.78),(0.82,0.82,0.82),(0.86,0.86,0.86),(0.9,0.9,0.9)])
+
+            layer=numpy.mean(s,axis=0)[cenx-9:cenx+9,ceny-9:ceny+9][numpy.arange(0,18,3),:][:,numpy.arange(0,18,3)]
+            if sign == 1:
+	        masked = numpy.ma.masked_where(layer != 100, layer)
+            else:
+	        masked = numpy.ma.masked_where(layer != 0, layer)
+            pylab.imshow(masked,vmin=0,vmax=100,cmap='gray',zorder=15) 
+            for x in range(7):
+                pylab.axhline(x-0.5, lw=2, color=(0.3,0.3,0.3), zorder=5)
+                pylab.axvline(x-0.5, lw=2, color=(0.3,0.3,0.3), zorder=5)
+            pylab.xticks([])
+            pylab.yticks([])
+
+        def plot_Vm(raw_signals,sign,neuron,msvm,scalebar=False,esyn=None,isyn=None):
+            #vm = numpy.concatenate([raw_signals[sign-1,:,neuron],raw_signals[sign,:,neuron],raw_signals[sign+1,:,neuron],raw_signals[sign+2,:,neuron]],axis=1)
+            vm = numpy.concatenate([raw_signals[sign-1,:,neuron],raw_signals[sign,:,neuron]],axis=1)[:,140:]
+            vm = numpy.squeeze(numpy.mean(vm[:,:],axis=0))
+            pylab.plot(vm,'k',lw=2)
+            mmin=min(numpy.min(vm),msvm)
+            pylab.ylim(mmin-4,mmin+40)
+            #pylab.plot([period,2*period-blank],[mmin-1,mmin-1],'k',lw=6)
+            pylab.plot([21,63],[mmin-3,mmin-3],'k',lw=6)
+            pylab.plot([0,len(vm)],[msvm,msvm],'k--',lw=1)
+	    pylab.axis('off')
+            if scalebar:
+               pylab.plot([len(vm)-21,len(vm)],[mmin-1.5,mmin-1.5],'k',lw=2)
+               pylab.plot([len(vm),len(vm)-0.01],[mmin-1.5,mmin+8.5],'k',lw=2)
+
+            if esyn is not None:
+                esyn = numpy.concatenate([esyn[sign-1,:,neuron],esyn[sign,:,neuron]],axis=1)
+                esyn = numpy.squeeze(numpy.mean(esyn[:,140:],axis=0)*1000)
+                isyn = numpy.concatenate([isyn[sign-1,:,neuron],isyn[sign,:,neuron]],axis=1)
+                isyn = numpy.squeeze(numpy.mean(isyn[:,140:],axis=0)*1000)
+		ax2 = pylab.gca().twinx()
+                pylab.ylim(-30,30)
+                pylab.gca().spines['left'].set_visible(False)
+	        pylab.gca().spines['top'].set_visible(False)
+	        pylab.gca().spines['bottom'].set_visible(False)
+                if scalebar:
+	    	    pylab.gca().spines['right'].set_bounds(0, 30)
+            	    pylab.yticks([0,15,30])
+		    pylab.ylabel('nS')
+                else: 
+                    pylab.gca().spines['right'].set_visible(False)
+            	    pylab.yticks([])            
+        	pylab.plot(esyn,'r',lw=2)
+        	pylab.plot(isyn,'b',lw=2)
+
+        def plot_cond_change(I1,I2,raw_signals1,raw_signals2,sign,neuron,first):
+            #b = numpy.squeeze(numpy.mean(numpy.concatenate([raw_signals1[sign-1,:,neuron],raw_signals1[sign,:,neuron],raw_signals1[sign+1,:,neuron],raw_signals1[sign+2,:,neuron]],axis=1),axis=0))
+            #c = numpy.squeeze(numpy.mean(numpy.concatenate([raw_signals2[sign-1,:,neuron],raw_signals2[sign,:,neuron],raw_signals2[sign+1,:,neuron],raw_signals2[sign+2,:,neuron]],axis=1),axis=0))
+            b = numpy.squeeze(numpy.mean(numpy.concatenate([raw_signals1[sign-1,:,neuron],raw_signals1[sign,:,neuron]],axis=1),axis=0))
+            c = numpy.squeeze(numpy.mean(numpy.concatenate([raw_signals2[sign-1,:,neuron],raw_signals2[sign,:,neuron]],axis=1),axis=0))
+            cond_change = (I1-I2)/(b-c)
+            #cond_change = cond_change/numpy.mean(cond_change[period-blank:period])*100
+	    cond_change = cond_change/numpy.mean(cond_change[blank+period-35:period+blank])*100
+            pylab.plot(cond_change[140:],'k',lw=2)
+            pylab.ylim(70,300)
+            #pylab.plot([period,2*period-blank],[-9,-9],'k',lw=6)
+            pylab.plot([21,63],[72,72],'k',lw=6)
+	    pylab.gca().spines['right'].set_visible(False)
+	    pylab.gca().spines['top'].set_visible(False)
+	    pylab.gca().spines['bottom'].set_visible(False)
+            pylab.xticks([])
+            if first:
+		    pylab.ylabel(r"$\Delta g(\%)$",fontsize=15)
+	            pylab.gca().spines['left'].set_linewidth(2)
+	            pylab.yticks([100,200,300],fontsize=15)
+	            pylab.gca().tick_params(direction='out', length=3, width=2, colors='k')
+            else:
+		    pylab.gca().spines['left'].set_visible(False)
+		    pylab.yticks([])
+            
+
+        pylab.figure(figsize=(10,15))
+        for i in range(0,len(neuron_indexes)):    
+            if i == 3: 
+		sb = True 
+	    else: 
+		sb = False
+            logger.info(i)
+            plus=numpy.where(stims[:,coordsx[i],coordsy[i]]==100)[0]
+            minus=numpy.where(stims[:,coordsx[i],coordsy[i]]==0)[0]
+            exc_stim = plus if excitatory_polarities[i]==1 else minus
+            inh_stim = plus if excitatory_polarities[i]==-1 else minus
+
+	    logger.info("B:"+str(numpy.shape(exc_stim)))
+
+
+            n=len(neuron_indexes)
+            pylab.subplot(8,n,1+i)
+            RF_contour_plot(RFs[neuron_indexes[i]],stims[exc_stim],excitatory_polarities[i],centerx[i],centery[i])
+            
+            pylab.subplot(8,n,1*n+1+i)
+            plot_Vm(raw_signals_I1,exc_stim,neuron_indexes[i],mean_spont_vm[neuron_indexes[i]],scalebar=sb,esyn=raw_signalsE,isyn=raw_signalsI)
+
+            pylab.subplot(8,n,2*n+1+i)
+            RF_contour_plot(RFs[neuron_indexes[i]],stims[inh_stim],-excitatory_polarities[i],centerx[i],centery[i])
+
+            pylab.subplot(8,n,3*n+1+i)
+            plot_Vm(raw_signals_I1,inh_stim,neuron_indexes[i],mean_spont_vm[neuron_indexes[i]],scalebar=sb,esyn=raw_signalsE,isyn=raw_signalsI)
+
+            pylab.subplot(8,n,4*n+1+i)
+            plot_Vm(raw_signals_I2,inh_stim,neuron_indexes[i],mean_spont_vm_dep[neuron_indexes[i]],scalebar=sb)
+
+            pylab.subplot(8,n,5*n+1+i)
+            plot_Vm(raw_signals_I3,inh_stim,neuron_indexes[i],mean_spont_vm_hyp1[neuron_indexes[i]],scalebar=sb)
+
+            pylab.subplot(8,n,6*n+1+i)
+            plot_Vm(raw_signals_I4,inh_stim,neuron_indexes[i],mean_spont_vm_hyp2[neuron_indexes[i]],scalebar=sb)
+
+            pylab.subplot(8,n,7*n+1+i)
+            plot_cond_change(I1,I3,raw_signals_I1,raw_signals_I3,inh_stim,neuron_indexes[i],i==0)
+    logger.info("S:"+str(numpy.shape(raw_signals0)))
+
+    cond(stims0,0,0.2,-0.1,-0.2,raw_signals0,raw_signals01,raw_signalsn02,raw_signals1,RFs,[5,6,7,19],[44,40,35,35],[47,37,38,31],[43,40,37,37],[43,34,43,37],[-1,1,-1,1],raw_signals_e,raw_signals_i)
+    pylab.savefig('Hirsch1.png',dpi=300)
+    cond(stims0,0,0.2,-0.1,-0.2,raw_signals0,raw_signals01,raw_signalsn02,raw_signals1,RFs,[10,12,13,15],[34,37,35,32],[34,40,37,34],[37,43,37,37],[37,43,37,37],[1,1,1,1],raw_signals_e,raw_signals_i)
+    pylab.savefig('Hirsch2.png',dpi=300)
+    cond(stims0,0,0.2,-0.1,-0.2,raw_signals0,raw_signals01,raw_signalsn02,raw_signals1,RFs,[5,6,10,19],[44,40,34,35],[47,37,34,31],[43,40,37,37],[43,34,37,37],[-1,1,1,1],raw_signals_e,raw_signals_i)
+    pylab.savefig('Hirsch.png',dpi=300)

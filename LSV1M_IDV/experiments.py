@@ -3,6 +3,7 @@ from mozaik.experiments import *
 from mozaik.experiments.vision import *
 from mozaik.sheets.population_selector import RCRandomPercentage
 from parameters import ParameterSet
+from mozaik.experiments.direct_stimulations_mixins import *
 
 
 def create_experiments(model):
@@ -41,18 +42,173 @@ def create_experiments_spont(model):
 def create_experiments_or(model):
 
     return [
-        # Spontaneous Activity
-        NoStimulation(model, ParameterSet({'duration': 3*8*2*5*3*8*7})),
-        # Measure orientation tuning with full-filed sinusoidal gratins
-        MeasureOrientationTuningFullfield(model, ParameterSet(
-            {'num_orientations': 2, 'spatial_frequency': 0.8, 'temporal_frequency': 2, 'grating_duration': 2*143*7, 'contrasts': [100, 10], 'num_trials': 5})),
+                           # Spontaneous Activity
+                           #NoStimulation(model, ParameterSet({'duration': 3*8*2*5*3*8*7})),
+                           # Measure orientation tuning with full-filed sinusoidal gratins
+                           #MeasureOrientationTuningFullfield(model, ParameterSet(
+                           #    {'num_orientations': 2, 'spatial_frequency': 0.8, 'temporal_frequency': 2, 'grating_duration': 2*143*7, 'contrasts': [100, 10], 'num_trials': 5})),
 
-        # Measure response to natural image with simulated eye movement
-        MeasureNaturalImagesWithEyeMovement(model, ParameterSet(
-            {'stimulus_duration': 2*143*7, 'num_trials': 5})),
+                           # Measure response to natural image with simulated eye movement
+                           #MeasureNaturalImagesWithEyeMovement(model, ParameterSet(
+                           #    {'stimulus_duration': 2*143*7, 'num_trials': 5})),
 
 
-    ]
+
+                           add_per_stimulus_current_injection(
+                                 NoStimulation(model,ParameterSet({'duration' : 10*147*7})),
+                                 stimulation_sheet = 'V1_Exc_L4',
+                                 stimulation_current = 0,
+                                 stimulation_configuration = {
+                                           'component' :  'mozaik.sheets.population_selector.RCGrid',
+                                           'params' :  {
+                                                         'size' : 1000,
+                                                         'spacing' : 200,
+                                                         'offset_x' : 0,
+                                                         'offset_y' : 0
+                                                        }
+                                         } 
+                           ),
+
+                           add_per_stimulus_current_injection(
+                                 NoStimulation(model,ParameterSet({'duration' : 10*147*7})),
+                                 stimulation_sheet = 'V1_Exc_L4',
+                                 stimulation_current = -0.5,
+                                 stimulation_configuration = {
+                                           'component' :  'mozaik.sheets.population_selector.RCGrid',
+                                           'params' :  {
+                                                         'size' : 1000,
+                                                         'spacing' : 200,
+                                                         'offset_x' : 0,
+                                                         'offset_y' : 0
+                                                        }
+                                         } 
+                           ),
+
+                           add_per_stimulus_current_injection(
+                                 NoStimulation(model,ParameterSet({'duration' : 10*147*7})),
+                                 stimulation_sheet = 'V1_Exc_L4',
+                                 stimulation_current = -0.2,
+                                 stimulation_configuration = {
+                                           'component' :  'mozaik.sheets.population_selector.RCGrid',
+                                           'params' :  {
+                                                         'size' : 1000,
+                                                         'spacing' : 200,
+                                                         'offset_x' : 0,
+                                                         'offset_y' : 0
+                                                        }
+                                         } 
+                           ),
+
+                           add_per_stimulus_current_injection(
+                                 NoStimulation(model,ParameterSet({'duration' : 10*147*7})),
+                                 stimulation_sheet = 'V1_Exc_L4',
+                                 stimulation_current = 0.2,
+                                 stimulation_configuration = {
+                                           'component' :  'mozaik.sheets.population_selector.RCGrid',
+                                           'params' :  {
+                                                         'size' : 1000,
+                                                         'spacing' : 200,
+                                                         'offset_x' : 0,
+                                                         'offset_y' : 0
+                                                        }
+                                         } 
+                           ),
+
+                           add_per_stimulus_current_injection(
+                                 MeasureOrientationTuningFullfield(model,ParameterSet({
+                                                                                 'num_orientations' : 2,
+                                                                                 'spatial_frequency' : 0.8,
+                                                                                 'temporal_frequency'  : 2,
+                                                                                 'grating_duration' : 2*147*7,
+                                                                                 'contrasts' : [100],
+                                                                                 'num_trials' : 10})),
+
+                                 stimulation_sheet = 'V1_Exc_L4',
+                                 stimulation_current = 0,
+                                 stimulation_configuration = {
+                                           'component' :  'mozaik.sheets.population_selector.RCGrid',
+                                           'params' :  {
+                                                         'size' : 1000,
+                                                         'spacing' : 200,
+                                                         'offset_x' : 0,
+                                                         'offset_y' : 0
+                                                        }
+                                         } 
+                           ),
+
+                           add_per_stimulus_current_injection(
+                                 MeasureOrientationTuningFullfield(model,ParameterSet({
+                                                                                 'num_orientations' : 2,
+                                                                                 'spatial_frequency' : 0.8,
+                                                                                 'temporal_frequency'  : 2,
+                                                                                 'grating_duration' : 2*147*7,
+                                                                                 'contrasts' : [100],
+                                                                                 'num_trials' : 10})),
+
+                                 stimulation_sheet = 'V1_Exc_L4',
+                                 stimulation_current = -0.5,
+                                 stimulation_configuration = {
+                                           'component' :  'mozaik.sheets.population_selector.RCGrid',
+                                           'params' :  {
+                                                         'size' : 1000,
+                                                         'spacing' : 200,
+                                                         'offset_x' : 0,
+                                                         'offset_y' : 0
+                                                        }
+                                         } 
+                           ),
+
+                           add_per_stimulus_current_injection(
+                                 MeasureOrientationTuningFullfield(model,ParameterSet({
+                                                                                 'num_orientations' : 2,
+                                                                                 'spatial_frequency' : 0.8,
+                                                                                 'temporal_frequency'  : 2,
+                                                                                 'grating_duration' : 2*147*7,
+                                                                                 'contrasts' : [100],
+                                                                                 'num_trials' : 10})),
+
+                                 stimulation_sheet = 'V1_Exc_L4',
+                                 stimulation_current = -0.2,
+                                 stimulation_configuration = {
+                                           'component' :  'mozaik.sheets.population_selector.RCGrid',
+                                           'params' :  {
+                                                         'size' : 1000,
+                                                         'spacing' : 200,
+                                                         'offset_x' : 0,
+                                                         'offset_y' : 0
+                                                        }
+                                         } 
+                           ),
+
+                           add_per_stimulus_current_injection(
+                                 MeasureOrientationTuningFullfield(model,ParameterSet({
+                                                                                 'num_orientations' : 2,
+                                                                                 'spatial_frequency' : 0.8,
+                                                                                 'temporal_frequency'  : 2,
+                                                                                 'grating_duration' : 2*147*7,
+                                                                                 'contrasts' : [100],
+                                                                                 'num_trials' : 10})),
+
+                                 stimulation_sheet = 'V1_Exc_L4',
+                                 stimulation_current = 0.2,
+                                 stimulation_configuration = {
+                                           'component' :  'mozaik.sheets.population_selector.RCGrid',
+                                           'params' :  {
+                                                         'size' : 1000,
+                                                         'spacing' : 200,
+                                                         'offset_x' : 0,
+                                                         'offset_y' : 0
+                                                        }
+                                         } 
+                           ),
+
+
+
+
+                          
+                        ]
+
+
 
 
 def create_experiments_stc(model):

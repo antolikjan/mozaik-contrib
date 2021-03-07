@@ -6,12 +6,12 @@ import time
 
 
 if True:
-    CombinationParameterSearch(SlurmSequentialBackendUK(num_threads=16, num_mpi=1), {
+    CombinationParameterSearch(SlurmSequentialBackendUK(num_threads=32, num_mpi=1), {
         #'sheets.l4_cortex_exc.K' : [1000],
-        'pynn_seed': [13],
+        'pynn_seed': [936395],
         'sheets.retina_lgn.params.noise.stdev': [1.7],
         'sheets.retina_lgn.params.gain_control.gain': [12],
-        'sheets.retina_lgn.params.gain_control.non_linear_gain.luminance_gain': [5],
+        'sheets.retina_lgn.params.gain_control.non_linear_gain.luminance_gain': [3],
         'sheets.l4_cortex_inh.L4InhL4ExcConnection.base_weight': [0.0023],
         #'sheets.l4_cortex_exc.AfferentConnection.base_weight' : [0.0015,0.0014,0.0013,0.0012],
     }).run_parameter_search()
