@@ -1,0 +1,12 @@
+{
+  "1" : {
+    'component' :  'mozaik.sheets.population_selector.RCAllWihinBoundry',
+    'variables' : ("spikes"),
+    'params' :  {
+                          'size': 3000.0,  
+                          'offset_x' : 0.0, 
+                          'offset_y' : 0.0, 
+
+                }
+  },
+}
